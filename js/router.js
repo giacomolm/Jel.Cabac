@@ -197,6 +197,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			//Codemirror doesn't refresh its context after changes, so we do manually
 			this.dslView.refresh();
 		}
+		else console.log("You have to configure an xsd file and at least a base file that will wrap your code");
       },
 
       saveFile: function(){
