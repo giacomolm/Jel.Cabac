@@ -143,7 +143,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			//add this canvas to the current collection of existing canvas
 			this.contents[this.canvas.id] = this.canvas;
 			currentComposed.canvas = this.canvas.id
-			this.tabView.addTab(this.canvas.id, currentComposed.props.id || "canvas"+this.tabView.tabs.length);
+			if(currentComposed.props && currentComposed.props.id) this.tabView.addTab(this.canvas.id, currentComposed.props.id);
+			else this.tabView.addTab(this.canvas.id,"canvas"+this.tabView.tabs.length);
 			Jel.Canvas = this.canvas;
 			this.changePage(this.canvas);	
       },
@@ -289,6 +290,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			$('#anteprima').empty();
 			this.anteprima = new anteprimaView();
 			$('#anteprima').append($(this.anteprima.el));
+
 			this.anteprima.arrange(this.canvasShapes, this.connections);
 		},
 

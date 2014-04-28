@@ -11,6 +11,116 @@
 
 <script type="text/javascript" src="lib/jel/jel.js"></script>
 <script data-main="js/main" src="lib/require/require.js"></script>
+
+<script>
+
+	Jel.fn.init = function(){
+
+		//Setting the xsd file in order to do validation
+		try{
+		  //Jel.attachXSD('schema/camel.xsd');
+		  //Jel.setBaseFile('xml/camelRoute.xml');
+		  //Jel.setNamespace('http://camel.apache.org/schema/spring');
+		  //Jel.setBaseElement('route');
+		  //Jel.setXMLWrapper('routes');
+		}
+		catch(err){
+		  console.log("Problems with http xml request");
+		}
+
+		var noop = new Jel.Shape();
+		noop.setImage("img/noop.gif");
+		noop.setName("Noop");
+		noop.setDimension(84,55);	
+		Jel.paletteShapes.addShape(noop);	
+
+		var prod = new Jel.Shape();
+		prod.setImage("img/prod.gif");
+		prod.setName("Prod");
+		prod.setDimension(102,54);	
+		Jel.paletteShapes.addShape(prod);
+
+		var cons = new Jel.Shape();
+		cons.setImage("img/cons.gif");
+		cons.setName("Cons");
+		cons.setDimension(102,54);	
+		Jel.paletteShapes.addShape(cons);
+
+		var trans = new Jel.Shape();
+		trans.setImage("img/trans.gif");
+		trans.setName("Trans");
+		trans.setDimension(161,55);	
+		Jel.paletteShapes.addShape(trans);
+
+		var split = new Jel.Shape();
+		split.setImage("img/split.gif");
+		split.setName("Split");
+		split.setDimension(233,54);	
+		Jel.paletteShapes.addShape(split);		
+
+		var merge = new Jel.Shape();
+		merge.setImage("img/merge.gif");
+		merge.setName("Merge");
+		merge.setDimension(233,54);	
+		Jel.paletteShapes.addShape(merge);	
+
+		var order = new Jel.Shape();
+		order.setImage("img/order.gif");
+		order.setName("Order");
+		order.setDimension(345,54);			
+		Jel.paletteShapes.addShape(order);		
+
+		//Adding composed algebra terms to palette
+		var plug = new Jel.Shape();
+		plug.setImage("img/plug.gif");
+		plug.setName("Plug");
+		plug.setDimension(84,55);	
+		plug.setAsComposed();		
+		Jel.paletteShapes.addShape(plug);	
+
+		var altern = new Jel.Shape();
+		altern.setImage("img/altern.gif");
+		altern.setName("Altern");
+		altern.setDimension(84,55);	
+		altern.setAsComposed();		
+		Jel.paletteShapes.addShape(altern);	
+
+		var conj = new Jel.Shape();
+		conj.setImage("img/conj.gif");
+		conj.setName("Altern");
+		conj.setDimension(84,55);	
+		conj.setAsComposed();		
+		Jel.paletteShapes.addShape(conj);	
+
+		var quot = new Jel.Shape();
+		quot.setImage("img/quot.gif");
+		quot.setName("Quot");
+		quot.setDimension(84,55);	
+		quot.setAsComposed();		
+		Jel.paletteShapes.addShape(quot);
+
+		var invert = new Jel.Shape();
+		invert.setImage("img/inv.gif");
+		invert.setName("Invert");
+		invert.setDimension(84,55);	
+		invert.setAsComposed();		
+		Jel.paletteShapes.addShape(invert);
+
+		/*instance1 = Jel.Canvas.addShape(shape1);	
+
+		var shape2 = new Jel.Shape();
+		shape2.setImage("img/mt.gif");
+		shape2.setName("Translator");
+		shape2.setPosition(240,140);
+		shape2.setMetaelement('transform');	
+		shape2.setAsComposed();
+		
+
+		Jel.paletteShapes.addShape(shape2);*/
+	}
+
+</script>
+
 </head>
 
 <body>
