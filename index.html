@@ -1,71 +1,148 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Jel.cabac by giacomolm</title>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>Jel</title>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>Jel.cabac</h1>
-        <p>Jel instance related to Connector Algebra</p>
+<link rel="stylesheet" href="css/codemirror.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/jstree/jstree.min.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/scrollbar.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/raphael.pan-zoom.css" type="text/css" media="screen">
 
-        <p class="view"><a href="https://github.com/giacomolm/Jel.Cabac">View the Project on GitHub <small>giacomolm/Jel.Cabac</small></a></p>
+<script type="text/javascript" src="lib/jel/jel.js"></script>
+<script data-main="js/main" src="lib/require/require.js"></script>
 
+<script>
 
-        <ul>
-          <li><a href="https://github.com/giacomolm/Jel.Cabac/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/giacomolm/Jel.Cabac/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/giacomolm/Jel.Cabac">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+	Jel.fn.init = function(){
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+		//Setting the xsd file in order to do validation
+		try{
+		  //Jel.attachXSD('schema/camel.xsd');
+		  //Jel.setBaseFile('xml/camelRoute.xml');
+		  //Jel.setNamespace('http://camel.apache.org/schema/spring');
+		  //Jel.setBaseElement('route');
+		  //Jel.setXMLWrapper('routes');
+		}
+		catch(err){
+		  console.log("Problems with http xml request");
+		}
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+		var noop = new Jel.Shape();
+		noop.setImage("img/noop.gif");
+		noop.setName("Noop");
+		noop.setDimension(84,55);	
+		Jel.paletteShapes.addShape(noop);	
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+		var prod = new Jel.Shape();
+		prod.setImage("img/prod.gif");
+		prod.setName("Prod");
+		prod.setDimension(102,54);	
+		Jel.paletteShapes.addShape(prod);
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+		var cons = new Jel.Shape();
+		cons.setImage("img/cons.gif");
+		cons.setName("Cons");
+		cons.setDimension(102,54);	
+		Jel.paletteShapes.addShape(cons);
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+		var trans = new Jel.Shape();
+		trans.setImage("img/trans.gif");
+		trans.setName("Trans");
+		trans.setDimension(161,55);	
+		Jel.paletteShapes.addShape(trans);
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+		var split = new Jel.Shape();
+		split.setImage("img/split.gif");
+		split.setName("Split");
+		split.setDimension(233,54);	
+		Jel.paletteShapes.addShape(split);		
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+		var merge = new Jel.Shape();
+		merge.setImage("img/merge.gif");
+		merge.setName("Merge");
+		merge.setDimension(233,54);	
+		Jel.paletteShapes.addShape(merge);	
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+		var order = new Jel.Shape();
+		order.setImage("img/order.gif");
+		order.setName("Order");
+		order.setDimension(345,54);			
+		Jel.paletteShapes.addShape(order);		
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+		//Adding composed algebra terms to palette
+		var plug = new Jel.Shape();
+		plug.setImage("img/plug.gif");
+		plug.setName("Plug");
+		plug.setDimension(84,54);	
+		plug.setAsComposed();
+		plug.setProperties({"id":"0"});
+		Jel.paletteShapes.addShape(plug);	
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+		var altern = new Jel.Shape();
+		altern.setImage("img/altern.gif");
+		altern.setName("Altern");
+		altern.setDimension(84,55);	
+		altern.setAsComposed();		
+		Jel.paletteShapes.addShape(altern);	
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/giacomolm">giacomolm</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
-    </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
-  </body>
+		var conj = new Jel.Shape();
+		conj.setImage("img/conj.gif");
+		conj.setName("Altern");
+		conj.setDimension(84,55);	
+		conj.setAsComposed();		
+		Jel.paletteShapes.addShape(conj);	
+
+		var quot = new Jel.Shape();
+		quot.setImage("img/quot.gif");
+		quot.setName("Quot");
+		quot.setDimension(84,55);	
+		quot.setAsComposed();		
+		Jel.paletteShapes.addShape(quot);
+
+		var invert = new Jel.Shape();
+		invert.setImage("img/inv.gif");
+		invert.setName("Invert");
+		invert.setDimension(84,55);	
+		invert.setAsComposed();		
+		Jel.paletteShapes.addShape(invert);
+
+		/*instance1 = Jel.Canvas.addShape(shape1);	
+
+		var shape2 = new Jel.Shape();
+		shape2.setImage("img/mt.gif");
+		shape2.setName("Translator");
+		shape2.setPosition(240,140);
+		shape2.setMetaelement('transform');	
+		shape2.setAsComposed();
+		
+
+		Jel.paletteShapes.addShape(shape2);*/
+	}
+
+</script>
+
+</head>
+
+<body>
+	<div id="menu"></div>
+	<div id="dialog"></div>
+	<div id="notification"></div>
+	<div id="middle">
+		<div id="palette"><div id="paletteheader"><h5>Palette</h5></div></div>
+		<div id="tab"></div>
+		<div id="container">
+			<div id="main" ondragover="event.preventDefault()"></div>
+			<div id="dsl"></div>
+		</div>
+		<div id="rightMenu">
+			<div id="treeheader"><h5>Tree</h5></div>
+			<div id="tree" class="jstree jstree-1 jstree-default jstree-default-responsive"></div>
+			<div id="properties"></div>
+			<div id="anteprimaheader"><h5>Anteprima</h5></div>
+			<div id="anteprima"></div>
+		</div>
+	</div>
+	
+</body>
 </html>
