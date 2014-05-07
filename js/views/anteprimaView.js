@@ -67,6 +67,11 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                 if(parent) level = Math.max(parent.attrs.width + parent.level+30, level);
                 var currentText = this.paper.text(level+20, breadth+5, shapes.at(i).name + ((shapes.at(i).props && shapes.at(i).props.id) ? ":"+shapes.at(i).props.id : ""));
                 var currentShape = this.paper.image(shapes.at(i).url, level, breadth+12, shapes.at(i).width || 86 , shapes.at(i).height || 54);
+                //WRAPPER PART - alpha
+                /*if(shapes.at(i).shapes){
+                    var size = this.getParentSize(shapes, shapes.at(i).id);
+                    this.paper.rect(level, breadth+12, size[0], size[1], 10)
+                }*/
                 //setting the original id
                 currentShape.id = shapes.at(i).id;
                 //setting the level, indicating the margin left, in order to retrieve it later
@@ -74,7 +79,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                 if(parent) currentShape.parent = parent;
 
                 this.shapes[shapes.at(i).id] = currentShape;
-                //draw connnections betwenn element of the same level and between the element and its father
+                //draw connnections between elements of the same level or between the element and its parent
                 if(parent) this.drawConnections(shapes.at(i).id, parent.id);
                 else this.drawConnections(shapes.at(i).id);
                 if(shapes.at(i).shapes && shapes.at(i).shapes.length>0){
@@ -116,6 +121,47 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
             return current_breadth;
         },
 
+        getParentSize : function(shapes, shapeId){
+            var getWidth = function(shapes, shapeId){
+
+                    var childs, el = shapes.get(shapeId);
+
+                    if(el && (childs = el.shapes)){
+
+                        var i,current_w=0,max = 0;
+
+                        for(i=0; i<childs.length; i++){
+                            current_w = 31 + getWidth(childs, childs.at(i).id);
+                            if(current_w>max) max = current_w;
+                        }
+                         console.log(el.id, max+el.width);
+                        return max+el.width;
+                    }
+                    else return el.width;
+                },
+                getHeight = function(shapes, shapeId, context){ 
+
+                    var childs, el = shapes.get(shapeId);
+
+                    if(el && (childs = el.shapes)){
+
+                        var i,current_h = 0;
+
+                        for(i=0; i<childs.length; i++){
+                            current_h += 20 + getHeight(childs, childs.at(i).id, context);
+                        }
+
+                        return current_h+el.height;
+                    }
+                    else return el.height;
+                };
+
+            var curr_width = getWidth(shapes, shapeId, this), curr_height = getHeight(shapes, shapeId, this);
+            //console.log(curr_width, curr_height) 
+            return [curr_width, curr_height];
+
+        },
+
         zoomIn: function(e){
             this.panZoom.zoomIn(1);
             e.preventDefault();
@@ -151,9 +197,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
 
                     }   
                 }(i, images,this);
-            }
-
-               
+            }  
         },
 
         exportHandler : function(event, length, svgData){
