@@ -183,11 +183,11 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       	if(Jel.baseFile && Jel.baseElement){
 			var conversionRes;
 			//Conversion phase: the result of conversion is contained in conversionRes
-			if(Jel.wrapper) conversionRes = Jel.convert(Jel.baseFile, Jel.wrapper, Jel.baseElement);
-			else conversionRes = Jel.convert(Jel.baseFile, undefined, Jel.baseElement);
+			if(Jel.wrapper) conversionRes = Jel.convert(Jel.baseFile, Jel.baseElement, Jel.wrapper);
+			else conversionRes = Jel.convert(Jel.baseFile, Jel.baseElement, undefined);
 
 			this.dslView.setText(conversionRes);
-
+			
 			var validateRes = Jel.validate(conversionRes, Jel.getSchema());
 			this.notification.warning(validateRes);
 			//if it's the first conversion, we need to add the dsl editor to the main div

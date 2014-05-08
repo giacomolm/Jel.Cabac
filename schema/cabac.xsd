@@ -1,42 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="statesList">
-	  <xs:sequence>
-	    <xs:element name="state" minOccurs="1" maxOccurs="unbounded" type="xs:string"/>
-	    <xs:element name="start" type="xs:string"/>
-	  </xs:sequence>
-	</xs:complexType>
+  <xs:complexType name="statesList">
+    <xs:sequence>
+      <xs:element name="state" minOccurs="1" maxOccurs="unbounded" type="xs:string"/>
+      <xs:element name="start" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:complexType name="actionElement">
-	  <xs:sequence>
-	    <xs:element name="label" minOccurs="1" maxOccurs="1" type="xs:string"/>
-	    <xs:element name="uri" minOccurs="1" maxOccurs="1" type="xs:string"/>
-	    <xs:element name="type" minOccurs="1" maxOccurs="1" type="xs:string"/>
-	  </xs:sequence>
-	</xs:complexType>
+  <xs:complexType name="actionElement">
+    <xs:sequence>
+      <xs:element name="label" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:element name="uri" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:element name="type" minOccurs="1" maxOccurs="1" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:complexType name="transitionType">
-	  <xs:sequence>
-	    <xs:element name="source" type="xs:string"/>
-	    <xs:element name="label" type="xs:string"/>
-	    <xs:element name="target" type="xs:string"/>
-	  </xs:sequence>
-	</xs:complexType>
+  <xs:complexType name="transitionType">
+    <xs:sequence>
+      <xs:element name="source" type="xs:string"/>
+      <xs:element name="label" type="xs:string"/>
+      <xs:element name="target" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:complexType name="protocolType">
-	  <xs:sequence>
-	    <xs:element name="transition" type="transitionType"/>
-	  </xs:sequence>
-	</xs:complexType>
+  <xs:complexType name="protocolType">
+    <xs:sequence>
+      <xs:element name="transition" type="transitionType"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="term">
+    <xs:sequence>
+      <xs:element name="id" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="terms">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="term" minOccurs="1" maxOccurs="unbounded" type="term"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 
-	<xs:complexType name="term">
-	  <xs:sequence>
-	    <xs:element name="name" type="xs:string"/>
-	  </xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="primitiveterm">
+	<xs:complexType name="primitiveterm" abstract="true">
 	  <xs:complexContent>
 	    <xs:extension base="term">
 	      <xs:sequence>
@@ -46,35 +54,39 @@
 	  </xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="compoundterm">
+  <xs:element name="compoundterm">
+	<xs:complexType>
 	  <xs:complexContent>
 	    <xs:extension base="term"/>
 	  </xs:complexContent>
 	</xs:complexType>
+  </xs:element>
 
-	<xs:complexType name="noop">
+  <xs:element name="noop">
+	<xs:complexType>
 	  <xs:complexContent>
 	    <xs:extension base="primitiveterm"/>
 	  </xs:complexContent>
 	</xs:complexType>
+  </xs:element>
 
-	<xs:complexType name="cons">
-	  <xs:complexContent>
-	    <xs:extension base="primitiveterm">
-	      <xs:sequence>
-		<xs:element name="actions">
-		  <xs:complexType>
-		    <xs:sequence>
-		      <xs:element name="input" minOccurs="1" maxOccurs="1" type="actionElement"/>
-		    </xs:sequence>
-		  </xs:complexType>
-		</xs:element>
-	      </xs:sequence>
-	    </xs:extension>
-	  </xs:complexContent>
-	</xs:complexType>
+  <xs:complexType name="cons">
+    <xs:complexContent>
+      <xs:extension base="primitiveterm">
+        <xs:sequence>
+      <xs:element name="actions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="input" minOccurs="1" maxOccurs="1" type="actionElement"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="prod">
+	<xs:complexType  name="prod">
 	  <xs:complexContent>
 	    <xs:extension base="primitiveterm">
 	      <xs:sequence>
@@ -90,25 +102,25 @@
 	  </xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="transProtocol">
-	  <xs:complexContent>
-	    <xs:extension base="protocolType">
-	      <xs:sequence>
-		<xs:element name="semantic">
-                  <xs:complexType>
-		    <xs:sequence>
-		      <xs:element name="translatorClass" type="xs:string"/>
-		      <xs:element name="translatorMethod" type="xs:string"/>
-		    </xs:sequence>
-                  </xs:complexType>
-		</xs:element>
-	      </xs:sequence>
-	    </xs:extension>
-	  </xs:complexContent>
-	</xs:complexType>
+  <xs:complexType name="transProtocol">
+    <xs:complexContent>
+      <xs:extension base="protocolType">
+        <xs:sequence>
+      <xs:element name="semantic">
+                <xs:complexType>
+          <xs:sequence>
+            <xs:element name="translatorClass" type="xs:string"/>
+            <xs:element name="translatorMethod" type="xs:string"/>
+          </xs:sequence>
+                </xs:complexType>
+      </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-
-	<xs:complexType name="trans">
+  <xs:element name="trans">
+	<xs:complexType>
 	  <xs:complexContent>
 	    <xs:extension base="primitiveterm">
 	      <xs:sequence>
@@ -125,27 +137,29 @@
 	    </xs:extension>
 	  </xs:complexContent>
 	</xs:complexType>
+  </xs:element>
 
-	<xs:complexType name="splitProtocol">
-	  <xs:complexContent>
-	    <xs:extension base="protocolType">
-	      <xs:sequence>
-		<xs:element name="semantic">
-		  <xs:complexType>
-		  <xs:sequence>
-		      <xs:element name="splitClass" type="xs:string"/>
-		      <xs:element name="splitMethod" type="xs:string"/>
-		      <xs:element name="routingClass" type="xs:string"/>
-		      <xs:element name="routingMethod" type="xs:string"/>
-		    </xs:sequence>
-		  </xs:complexType>
-		</xs:element>
-	      </xs:sequence>
-	    </xs:extension>
-	  </xs:complexContent>
-	</xs:complexType>
+  <xs:complexType name="splitProtocol">
+    <xs:complexContent>
+      <xs:extension base="protocolType">
+        <xs:sequence>
+      <xs:element name="semantic">
+        <xs:complexType>
+        <xs:sequence>
+            <xs:element name="splitClass" type="xs:string"/>
+            <xs:element name="splitMethod" type="xs:string"/>
+            <xs:element name="routingClass" type="xs:string"/>
+            <xs:element name="routingMethod" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="split">
+  <xs:element name="split">
+	<xs:complexType>
 	  <xs:complexContent>
 	    <xs:extension base="primitiveterm">
 	      <xs:sequence>
@@ -162,24 +176,26 @@
 	    </xs:extension>
 	  </xs:complexContent>
 	</xs:complexType>
+  </xs:element>
 
-	<xs:complexType name="mergeProtocol">
-	  <xs:complexContent>
-	    <xs:extension base="protocolType">
-	      <xs:sequence>
-		<xs:element name="semantic">
-		  <xs:complexType>
-		    <xs:sequence>
-		      <xs:element name="aggregationStrategy" type="xs:string"/>
-		    </xs:sequence>
-		  </xs:complexType>
-		</xs:element>
-	      </xs:sequence>
-	    </xs:extension>
-	  </xs:complexContent>
-	</xs:complexType>
+  <xs:complexType name="mergeProtocol">
+    <xs:complexContent>
+      <xs:extension base="protocolType">
+        <xs:sequence>
+      <xs:element name="semantic">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="aggregationStrategy" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="merge">
+  <xs:element name="merge">
+	<xs:complexType>
 	  <xs:complexContent>
 	    <xs:extension base="primitiveterm">
 	      <xs:sequence>
@@ -196,25 +212,27 @@
 	    </xs:extension>
 	  </xs:complexContent>
 	</xs:complexType>
+  </xs:element>
 
-	<xs:complexType name="orderProtocol">
-	  <xs:complexContent>
-	    <xs:extension base="protocolType">
-	      <xs:sequence>
-		<xs:element name="semantic">
-		  <xs:complexType>
-		    <xs:sequence>
-		      <xs:element name="orderClass" type="xs:string"/>
-		      <xs:element name="orderMethod" type="xs:string"/>
-		    </xs:sequence>
-		  </xs:complexType>
-		</xs:element>
-	      </xs:sequence>
-	    </xs:extension>
-	  </xs:complexContent>
-	</xs:complexType>
+  <xs:complexType name="orderProtocol">
+    <xs:complexContent>
+      <xs:extension base="protocolType">
+        <xs:sequence>
+      <xs:element name="semantic">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="orderClass" type="xs:string"/>
+            <xs:element name="orderMethod" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="order">
+  <xs:element name="order">
+	<xs:complexType>
 	  <xs:complexContent>
 	    <xs:extension base="primitiveterm">
 	      <xs:sequence>
@@ -231,56 +249,65 @@
 	    </xs:extension>
 	  </xs:complexContent>
 	</xs:complexType>
+  </xs:element>
 
-	<xs:complexType name="unaryterm">
-	  <xs:complexContent>
-	    <xs:extension base="term">
-	      <xs:sequence>
-		<xs:element name="operand" type="term"/>
-	      </xs:sequence>
-	    </xs:extension>
-	  </xs:complexContent>
-	</xs:complexType>
+  <xs:complexType name="unaryterm">
+    <xs:complexContent>
+      <xs:extension base="term">
+        <xs:sequence>
+      <xs:element name="operand" type="term"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="binaryterm">
-	  <xs:complexContent>
-	    <xs:extension base="term">
-	      <xs:sequence>
-		<xs:element name="leftOperand" type="term"/>
-		<xs:element name="rightOperand" type="term"/>
-	      </xs:sequence>
-	    </xs:extension>
-	  </xs:complexContent>
-	</xs:complexType>
+  <xs:complexType  name="binaryterm">
+    <xs:complexContent>
+      <xs:extension base="term">
+        <xs:sequence>
+      <xs:element name="leftOperand" type="term"/>
+      <xs:element name="rightOperand" type="term"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="invert">
+  <xs:element name="invert">
+	<xs:complexType>
 	  <xs:complexContent>
 	    <xs:extension base="unaryterm"/>
 	  </xs:complexContent>
 	</xs:complexType>
+  </xs:element>
 
-	<xs:complexType name="plug">
+  <xs:complexType name="plug">
+    <xs:complexContent>
+      <xs:extension base="binaryterm"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="altern">
+	<xs:complexType>
 	  <xs:complexContent>
 	    <xs:extension base="binaryterm"/>
 	  </xs:complexContent>
 	</xs:complexType>
+  </xs:element>
 
-	<xs:complexType name="altern">
+  <xs:element name="conj">
+	<xs:complexType>
 	  <xs:complexContent>
 	    <xs:extension base="binaryterm"/>
 	  </xs:complexContent>
 	</xs:complexType>
+  </xs:element>
 
-	<xs:complexType name="conj">
+  <xs:element name="quot">
+	<xs:complexType>
 	  <xs:complexContent>
 	    <xs:extension base="binaryterm"/>
 	  </xs:complexContent>
 	</xs:complexType>
-
-	<xs:complexType name="quot">
-	  <xs:complexContent>
-	    <xs:extension base="binaryterm"/>
-	  </xs:complexContent>
-	</xs:complexType>
-
+  </xs:element>
+  
 </xs:schema> 

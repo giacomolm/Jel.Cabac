@@ -18,10 +18,10 @@
 
 		//Setting the xsd file in order to do validation
 		try{
-		  //Jel.attachXSD('schema/camel.xsd');
-		  //Jel.setBaseFile('xml/camelRoute.xml');
+		  Jel.attachXSD('schema/cabac.xsd');
+		  Jel.setBaseFile('xml/terms.xml');
 		  //Jel.setNamespace('http://camel.apache.org/schema/spring');
-		  //Jel.setBaseElement('route');
+		  Jel.setBaseElement('terms');
 		  //Jel.setXMLWrapper('routes');
 		}
 		catch(err){
@@ -31,43 +31,50 @@
 		var noop = new Jel.Shape();
 		noop.setImage("img/noop.gif");
 		noop.setName("Noop");
-		noop.setDimension(84,55);	
+		noop.setDimension(84,55);
+		noop.setMetaelement("noop");	
 		Jel.paletteShapes.addShape(noop);	
 
 		var prod = new Jel.Shape();
 		prod.setImage("img/prod.gif");
 		prod.setName("Prod");
-		prod.setDimension(102,54);	
+		prod.setDimension(102,54);
+		prod.setMetaelement("prod");	
 		Jel.paletteShapes.addShape(prod);
 
 		var cons = new Jel.Shape();
 		cons.setImage("img/cons.gif");
 		cons.setName("Cons");
 		cons.setDimension(102,54);	
+		cons.setMetaelement("cons");
 		Jel.paletteShapes.addShape(cons);
 
 		var trans = new Jel.Shape();
 		trans.setImage("img/trans.gif");
 		trans.setName("Trans");
-		trans.setDimension(161,55);	
+		trans.setDimension(161,55);
+		trans.setMetaelement("trans");	
 		Jel.paletteShapes.addShape(trans);
 
 		var split = new Jel.Shape();
 		split.setImage("img/split.gif");
 		split.setName("Split");
-		split.setDimension(233,54);	
+		split.setDimension(233,54);
+		split.setMetaelement("split");
 		Jel.paletteShapes.addShape(split);		
 
 		var merge = new Jel.Shape();
 		merge.setImage("img/merge.gif");
 		merge.setName("Merge");
-		merge.setDimension(233,54);	
+		merge.setDimension(233,54);
+		merge.setMetaelement("merge");
 		Jel.paletteShapes.addShape(merge);	
 
 		var order = new Jel.Shape();
 		order.setImage("img/order.gif");
 		order.setName("Order");
-		order.setDimension(345,54);			
+		order.setDimension(345,54);
+		order.setMetaelement("order");			
 		Jel.paletteShapes.addShape(order);		
 
 		//Adding composed algebra terms to palette
@@ -76,28 +83,31 @@
 		plug.setName("Plug");
 		plug.setDimension(84,54);	
 		plug.setAsComposed();
-		plug.setProperties({"id":""});
+		plug.setMetaelement("plug");
 		Jel.paletteShapes.addShape(plug);	
 
 		var altern = new Jel.Shape();
 		altern.setImage("img/altern.gif");
 		altern.setName("Altern");
 		altern.setDimension(84,55);	
-		altern.setAsComposed();		
+		altern.setAsComposed();
+		altern.setMetaelement("altern");
 		Jel.paletteShapes.addShape(altern);	
 
 		var conj = new Jel.Shape();
 		conj.setImage("img/conj.gif");
-		conj.setName("Altern");
+		conj.setName("Conj");
 		conj.setDimension(84,55);	
-		conj.setAsComposed();		
+		conj.setAsComposed();
+		conj.setMetaelement("conj");	
 		Jel.paletteShapes.addShape(conj);	
 
 		var quot = new Jel.Shape();
 		quot.setImage("img/quot.gif");
 		quot.setName("Quot");
 		quot.setDimension(84,55);	
-		quot.setAsComposed();		
+		quot.setAsComposed();
+		quot.setMetaelement("quot");	
 		Jel.paletteShapes.addShape(quot);
 
 		var invert = new Jel.Shape();
@@ -105,6 +115,7 @@
 		invert.setName("Invert");
 		invert.setDimension(84,55);	
 		invert.setAsComposed();		
+		invert.setMetaelement("invert");
 		Jel.paletteShapes.addShape(invert);
 
 		/*instance1 = Jel.Canvas.addShape(shape1);	
