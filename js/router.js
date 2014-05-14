@@ -52,13 +52,16 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		//adding the palette with the default shapes
 		this.paletteView =new paletteView(this.paletteShapes);
 		$('#palette').append($(this.paletteView.el));
-		//setting perfect scrollbar in order to manager in a goog way the overflow
+		//setting perfect scrollbar in order to manage in a better way the overflow
 		$('#basepalette').perfectScrollbar();
 		$('#composedpalette').perfectScrollbar();
 		      
 		//adding the default text editor view
 		this.dslView = new dslView();
 		$('#dsl').append($(this.dslView.el));
+
+		//initializing the scrollbar on the empty container
+		$('#properties_ul').perfectScrollbar();
 		//this.addCustomEvents();
 
       },
@@ -78,6 +81,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		this.treeView = new treeView({collection:this.canvasShapes, canvas: this.canvas});
 		$('#tree').empty();
 		$('#tree').append($(this.treeView.el));
+		$('#tree').perfectScrollbar();
+
 
 		this.refreshAnteprima();
       },
@@ -175,6 +180,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			$('#properties').empty();
 			this.propertiesView = new propertiesView({model : currentModel});
 			$('#properties').append($(this.propertiesView.el));
+			$('#properties_ul').perfectScrollbar('update');
 		}
       },
 

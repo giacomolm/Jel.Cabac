@@ -10,7 +10,8 @@ define(["jquery", "underscore", "backbone", "jel"],
 		  height : 0,
 		  props : undefined, //properties associated to shape, retrieved with the help of the meta-element attribute
 		  el : undefined, //represent the grafical element associated
-		  metaelement : undefined, // if an xsd is attached, represents the corresponding element 
+		  metaelement : undefined, // if an xsd is attached, represents the corresponding element,
+		  xsi : undefined,
 		  type : "base",
 		  shapes : undefined, //if the shape is composed, it's composed of subelement, included in the shapes attr
 		  name : undefined, //name (alias) associated to the shape
@@ -25,9 +26,11 @@ define(["jquery", "underscore", "backbone", "jel"],
 			this.props = shape.props;
 			this.el = shape.el;
 			this.metaelement = shape.metaelement;
+			this.xsi = shape.xsi;
 			this.name = shape.name;
 			this.width = shape.width;
 			this.height = shape.height;
+			this.type = shape.type;
 		}
       },
 
@@ -51,7 +54,7 @@ define(["jquery", "underscore", "backbone", "jel"],
 				for(var propName in result) {
 				    if(result.hasOwnProperty(propName)) {
 					//define its value as an empty string
-					this.props[propName] = '';   
+					this.props[propName] = result[propName];   
 				    }
 				}
 			}
@@ -63,8 +66,12 @@ define(["jquery", "underscore", "backbone", "jel"],
       },
       
       //element is a string
-      setMetaelement: function(element){
+      //xsi indicate if the element is a complex type, and contain the tag that includes the element
+      setMetaelement: function(element, xsi){
 		this.metaelement = element;
+		if(xsi){
+			this.xsi = xsi;
+		}
 		this.setProperties();
       },
 
@@ -112,6 +119,7 @@ define(["jquery", "underscore", "backbone", "jel"],
 		  }
 		  shape.props = this.props;
 		  shape.metaelement = this.metaelement;
+		  shape.xsi = this.xsi;
 		  shape.name = this.name;
 		  shape.type = this.type;
 		  if(this.shapes){

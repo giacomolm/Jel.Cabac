@@ -88,7 +88,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		var currentShape = new Shape();
 		//assigning the current timestamp as id
 		currentShape.id = (new Date()).getTime();
-		if(shape.metaelement) currentShape.setMetaelement(shape.metaelement);
+		if(shape.metaelement) currentShape.setMetaelement(shape.metaelement, shape.xsi);
 		
 		//drawing the element with raphael	
 		var shapeEl = context.drawShape(shape, currentShape.id, context);

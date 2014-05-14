@@ -24,7 +24,7 @@ body {
 #palette{
 	float:left;
 	width : 125px;
-	height: 535px;
+	height: 600px;
 	font-family: 'Open Sans','Droid Sans',arial,sans-serif;
 	border:1px solid #DDD;
 }
@@ -68,7 +68,7 @@ body {
 
 
 #basepalette{
-	height : 220px;
+	height : 250px;
 	overflow-y: hidden;
 	overflow-x: hidden;
 	position:relative;
@@ -77,7 +77,7 @@ body {
 }
 
 #composedpalette{
-	height : 220px;
+	height : 250px;
 	position:relative;
 	overflow-y: hidden;
 	overflow-x: hidden;
@@ -153,6 +153,7 @@ body {
 	height:511px;
 	background-color: #FFF;
 }
+
 p {
 	text-align: center;
 }
@@ -313,20 +314,23 @@ span.clear{
 	margin-bottom: 10px;
 	border:1px solid #DDD;
 	border-top : none;
-	width: 100%
+	width: 100%;
+	max-height : 170px;
+	height: auto;
+	overflow: hidden;
 }
 
 #tree ul{
 	padding-left: -15px;
 }
 
-#properties{
+.properties{
 	font-family: "SQMarket-regular","Helvetica Neue",sans-serif;
-	width: 100%;
+	
 	border:1px solid #DDD;
 }
 
-#properties h5{
+.properties h5{
 	margin-top: 0;
 	padding-bottom: 10px;
 	border-bottom:1px solid #DDD;
@@ -334,11 +338,18 @@ span.clear{
 	
 }
 
-#properties div > ul{
-	margin-left: -10px;
+#properties_ul{
+	overflow-y: hidden;
+	overflow-x: auto;
+	max-height:200px;
+	height: auto;
 }
 
-#properties li{
+.properties ul>div{
+	margin-left: -20px;
+}
+
+.properties li{
 	list-style-type: none;
 }
 

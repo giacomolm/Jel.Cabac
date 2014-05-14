@@ -20,7 +20,7 @@
 		try{
 		  Jel.attachXSD('schema/cabac.xsd');
 		  Jel.setBaseFile('xml/terms.xml');
-		  //Jel.setNamespace('http://camel.apache.org/schema/spring');
+		  Jel.setNamespace('http://www.w3.org/2001/XMLSchema-instance');
 		  Jel.setBaseElement('terms');
 		  //Jel.setXMLWrapper('routes');
 		}
@@ -32,49 +32,49 @@
 		noop.setImage("img/noop.gif");
 		noop.setName("Noop");
 		noop.setDimension(84,55);
-		noop.setMetaelement("noop");	
+		noop.setMetaelement("noop", "term");	
 		Jel.paletteShapes.addShape(noop);	
 
 		var prod = new Jel.Shape();
 		prod.setImage("img/prod.gif");
 		prod.setName("Prod");
 		prod.setDimension(102,54);
-		prod.setMetaelement("prod");	
+		prod.setMetaelement("prod", "term");	
 		Jel.paletteShapes.addShape(prod);
 
 		var cons = new Jel.Shape();
 		cons.setImage("img/cons.gif");
 		cons.setName("Cons");
 		cons.setDimension(102,54);	
-		cons.setMetaelement("cons");
+		cons.setMetaelement("cons", "term");
 		Jel.paletteShapes.addShape(cons);
 
 		var trans = new Jel.Shape();
 		trans.setImage("img/trans.gif");
 		trans.setName("Trans");
 		trans.setDimension(161,55);
-		trans.setMetaelement("trans");	
+		trans.setMetaelement("trans", "term");	
 		Jel.paletteShapes.addShape(trans);
 
 		var split = new Jel.Shape();
 		split.setImage("img/split.gif");
 		split.setName("Split");
 		split.setDimension(233,54);
-		split.setMetaelement("split");
+		split.setMetaelement("split", "term");
 		Jel.paletteShapes.addShape(split);		
 
 		var merge = new Jel.Shape();
 		merge.setImage("img/merge.gif");
 		merge.setName("Merge");
 		merge.setDimension(233,54);
-		merge.setMetaelement("merge");
+		merge.setMetaelement("merge", "term");
 		Jel.paletteShapes.addShape(merge);	
 
 		var order = new Jel.Shape();
 		order.setImage("img/order.gif");
 		order.setName("Order");
 		order.setDimension(345,54);
-		order.setMetaelement("order");			
+		order.setMetaelement("order", "term");			
 		Jel.paletteShapes.addShape(order);		
 
 		//Adding composed algebra terms to palette
@@ -83,7 +83,7 @@
 		plug.setName("Plug");
 		plug.setDimension(84,54);	
 		plug.setAsComposed();
-		plug.setMetaelement("plug");
+		plug.setMetaelement("plug", "term");
 		Jel.paletteShapes.addShape(plug);	
 
 		var altern = new Jel.Shape();
@@ -115,7 +115,7 @@
 		invert.setName("Invert");
 		invert.setDimension(84,55);	
 		invert.setAsComposed();		
-		invert.setMetaelement("invert");
+		invert.setMetaelement("invert", "term");
 		Jel.paletteShapes.addShape(invert);
 
 		/*instance1 = Jel.Canvas.addShape(shape1);	
@@ -148,8 +148,8 @@
 		</div>
 		<div id="rightMenu">
 			<div id="treeheader"><h5>Tree</h5></div>
-			<div id="tree" class="jstree jstree-1 jstree-default jstree-default-responsive"></div>
-			<div id="properties"></div>
+			<div id="tree" class="jstree jstree-1 jstree-default jstree-default-responsive" style="position: relative; overflow:hidden"></div>
+			<div class="properties"><h5>Properties</h5><div id="properties_ul" style="position:relative"><ul id="properties"></ul></div></div>
 			<div id="anteprimaheader"><h5>Anteprima</h5></div>
 			<div id="anteprima"></div>
 		</div>
