@@ -21,8 +21,10 @@ define(["jquery", "underscore", "ractive", "models/Shape"],
 				var shape = new Shape();
 				shape.setId(shapes[i].id);
 				shape.setImage(shapes[i].url);
+				shape.setDimension(shapes[i].width, shapes[i].height);
 				shape.setPosition(shapes[i].x, shapes[i].y);
 				shape.setMetaelement(shapes[i].metaelement);
+				shape.setXsi(shapes[i].xsi);
 				//set properties ha sto be called after the setmetaelement!
 				shape.setProperties(shapes[i].props);
 				shape.setName(shapes[i].name);

@@ -171,6 +171,7 @@ p {
 #menu ul{
 	list-style-type: none;
 	padding : 0;
+	z-index: 10
 }
 
 #menu li{
@@ -199,6 +200,10 @@ div#menu li:hover{
 	line-height: 1.5;
 	font-weight: normal;
 	cursor:pointer;
+}
+
+#xmlImport{
+	display:none;
 }
 
 .subMenu{

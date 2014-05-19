@@ -5,7 +5,9 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "text!template
 	
 	events :{
 		"keyup input" : "updateProps",
-        "click .add" : "addProperty"
+        "click .add" : "addProperty",
+        "click .remove" : "removeProperty",
+
 	},
 	    
         initialize: function (shapeId){
@@ -25,7 +27,7 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "text!template
 
         addProperty: function(ev){
             var i,curr_path = ev.target.id.split(","), curr_attr = this.model.props;
-            for(i=0; i<curr_path.length-1; i++){
+            for(i=0; i<curr_path.length; i++){
                 if(curr_attr) curr_attr = curr_attr[curr_path[i]];
             }
 
@@ -33,16 +35,27 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "text!template
             curr_attr.push(new_el);
             this.render();
         },
+
+        removeProperty: function(ev){
+            var i,curr_path = ev.target.id.split(","), curr_attr = this.model.props;
+
+                for(i=0; i<=curr_path.length-2; i++){
+                    if(curr_attr) curr_attr = curr_attr[curr_path[i]];
+                }
+                var curr_ind = parseInt(curr_path[curr_path.length-1]);
+                curr_attr.splice(curr_ind, 1);
+                this.render();
+        },
 	
         render: function (eventName) {
             $(this.el).empty();
+            //console.log(this.model.props)
             for(var propName in this.model.props){
                 if(this.model.props.hasOwnProperty(propName)){
                     var curr_prop = new Object();
                     curr_prop.id = propName;
                     curr_prop.name = propName;
                     if(this.model.props[propName] instanceof Array){
-                        if(this.model.props[propName].type) console.log('ciao');
                         this.template = new Ractive({el : $(this.el), template: header, data: curr_prop, append:true});
                     } 
                     else if(this.model.props[propName] instanceof Object){
@@ -58,65 +71,40 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "text!template
                     }
                 }
             }
-            //console.log(this.el.parentNode)
 
             return this;
         },
 
-        subRender: function(model, parentName){
+        subRender: function(model, parentName, parentType){
+
             for(var propName in model){
                 if(model.hasOwnProperty(propName)){
                     //model.name = propName;
                     if(model[propName] instanceof Array){
-                        if(model[propName].unbounded){
-                            var curr_prop = new Object();
-                            curr_prop.id = parentName+","+propName+",0";
-                            curr_prop.name = propName;
-                            curr_prop.unbounded = model[propName].unbounded;
-                            
-                            this.template = new Ractive({el : $(this.el), template: header, data: curr_prop, append:true});
-                            this.subRender(model[propName], parentName+","+propName);
-                        }
-                        else{
-                            if(model[propName].length == 0){
-                                //there must be at least one element
-                                model[propName][0] = undefined;
-                                var curr_prop = new Object();
-                                curr_prop.id = parentName+","+propName+",0";
-                                curr_prop.name = propName;
-                                curr_prop.value = model[propName];
-                                curr_prop.unbounded = model[propName].unbounded;
-
-                                this.template = new Ractive({el : $(this.el), template: template, data : curr_prop, append:true});
-                            }
-                            else{
-                                //enumerate elements
-                                var k, curr_prop = new Object();
-
-                                for(k=0; k<model[propName].length; k++){
-                                    curr_prop.id = parentName+","+propName+","+k;
-                                    curr_prop.name = propName;
-                                    curr_prop.value = model[propName][k];
-                                    if(k==model[propName].length-1) curr_prop.unbounded = model[propName].unbounded;
-                                    this.template = new Ractive({el : $(this.el), template: template, data : curr_prop, append:true});
-                                }
-                            }
-                        }
+                        //the attribute unbounded allows to understand if sub elements can be added at runtime, with the + option
+                        var curr_prop = new Object();
+                        curr_prop.id = parentName+","+propName;
+                        curr_prop.name = propName;
+                        curr_prop.unbounded = true;
+                        
+                        this.template = new Ractive({el : $(this.el), template: header, data: curr_prop, append:true});
+                        this.subRender(model[propName], parentName+","+propName, "Array");
                     }
                     else if(model[propName] instanceof Object){
                         var curr_prop = new Object();
-                        curr_prop.id = parentName+","+propName+",0";
+                        curr_prop.id = parentName+","+propName;
                         curr_prop.name = propName;
                         curr_prop.unbounded = model[propName].unbounded;
-                        //if(model[propName].unbounded) attr_head+="+<br>";
+                        if(parentType && parentType=="Array") curr_prop.minus = true;
                         this.template = new Ractive({el : $(this.el), template: header, data: curr_prop, append:true});
                         this.subRender(model[propName], parentName+","+propName);
                     } 
-                    else if(propName !='unbounded'){
+                    else if(propName !='unbounded'){ //Base element, it's not an object, neither an Array
                         var curr_prop = new Object();
                         curr_prop.id = parentName+","+propName;
                         curr_prop.name = propName;
                         curr_prop.value = model[propName];
+                        if(parentType && parentType=="Array") curr_prop.minus = true;
                         this.template = new Ractive({el : $(this.el), template: template, data : curr_prop, append:true});
                     }
                 }

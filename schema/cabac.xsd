@@ -62,13 +62,11 @@
   </xs:complexType>
   </xs:element>
 
-  <xs:element name="noop">
-  <xs:complexType>
+  <xs:complexType name="noop">
     <xs:complexContent>
       <xs:extension base="primitiveterm"/>
     </xs:complexContent>
   </xs:complexType>
-  </xs:element>
 
   <xs:complexType name="cons">
     <xs:complexContent>
@@ -247,7 +245,7 @@
     <xs:complexContent>
       <xs:extension base="term">
         <xs:sequence>
-      <xs:element name="operand" type="term"/>
+      <xs:element name="term" minOccurs="1" maxOccurs="1" type="term"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -263,13 +261,11 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:element name="invert">
-  <xs:complexType>
+  <xs:complexType name="invert">
     <xs:complexContent>
       <xs:extension base="unaryterm"/>
     </xs:complexContent>
   </xs:complexType>
-  </xs:element>
 
   <xs:complexType name="plug">
     <xs:complexContent>
@@ -277,28 +273,22 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:element name="altern">
-  <xs:complexType>
+  <xs:complexType name="altern">
     <xs:complexContent>
       <xs:extension base="binaryterm"/>
     </xs:complexContent>
   </xs:complexType>
-  </xs:element>
 
-  <xs:element name="conj">
-  <xs:complexType>
+  <xs:complexType name="conj">
     <xs:complexContent>
       <xs:extension base="binaryterm"/>
     </xs:complexContent>
   </xs:complexType>
-  </xs:element>
 
-  <xs:element name="quot">
-  <xs:complexType>
+  <xs:complexType name="quot">
     <xs:complexContent>
       <xs:extension base="binaryterm"/>
     </xs:complexContent>
   </xs:complexType>
-  </xs:element>
   
 </xs:schema> 

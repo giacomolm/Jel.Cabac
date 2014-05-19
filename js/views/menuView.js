@@ -16,16 +16,19 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 		    "mouseover #aboutMenu" : "showAboutOpt",
 		    "mouseout #aboutMenu" : "hideAboutOpt",
 		    "click #infoOpt": "openInfo",
+		    "mouseover #importOpt" : "showImportOpts",
+		    "mouseout #importOpt" : "hideImportOpts",
 		    "mouseover #exportOpt" : "showExportOpts",
 		    "mouseout #exportOpt" : "hideExportOpts",
-		    "click #exportSVG" : "exportSVG"
+		    "click #importXML" : "importXML", 
+		    "click #exportSVG" : "exportSVG",
+		    "click #exportXML" : "exportXML"
 
         },	
 	
         initialize: function (shapes, connections){
         	if(window.FileReader){
 		        	this.reader = new FileReader();
-		        	this.reader.onload = this.readerHandler(this);
 		    }
 			this.shapes = shapes;
 			this.connections = connections;
@@ -64,6 +67,14 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 			$('#aboutOpts').hide();
 		},
 
+		showImportOpts: function(){
+			$('#importOpts').show();
+		},
+
+		hideImportOpts: function(){
+			$('#importOpts').hide();
+		},
+
 		showExportOpts: function(){
 			$('#exportOpts').show();
 		},
@@ -74,6 +85,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 
 		openFile: function(){
 			$("#fileOpts").hide();
+			this.reader.onload = this.readerHandler(this);
 			$("#fileOpen").trigger('click');
 		},
 
@@ -108,10 +120,35 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 			Backbone.history.navigate('exportSVG', {trigger: true});
 		},
 
+		importXML: function(){
+			//$("#importXML").hide();
+			this.reader.onload = this.xmlHandler(this);
+			$("#xmlImport").trigger('click');
+		},
+
+		importHandler: function(event){
+			var file;
+			if(event.target.files && (file = event.target.files[0]))
+				event.data.context.reader.readAsText(file); 
+		},
+
+		xmlHandler:function(context){
+			return function(){
+				//Here we convert the loaded object
+				Jel.importValue = context.reader.result;
+				Backbone.history.navigate('import', {trigger: true});
+			};
+		},
+
+		exportXML: function(){
+			Backbone.history.navigate('exportXML', {trigger: true});
+		},
+
         render: function (eventName) {
 		    this.template = new Ractive({el : $(this.el), template: template});
 		    //Attaching file open handler
 		    $(this.template.el.querySelector('#fileOpen')).on("change", {context: this},this.openHandler);
+		     $(this.template.el.querySelector('#xmlImport')).on("change", {context: this},this.importHandler);
 		    return this;
         }
        

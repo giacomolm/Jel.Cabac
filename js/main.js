@@ -59,6 +59,8 @@ require(['jquery','domReady','underscore','backbone', 'xmllint', 'router', 'jel'
 		
 		    //Setting the default Jel shape model,
 		    Jel.Shape = Shape;
+            //Setting the default Jel shape collection function,
+            Jel.Shapes = Shapes;
 		    //the default Jel shape collections for palette,
 		    var paletteShapes = Jel.paletteShapes = new Shapes();
 		    //and the default Jel shapes instances, related to canvas

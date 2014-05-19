@@ -35,6 +35,10 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		//if the canvas is derived from a composed shape, the canvas id is the same of the shape
 		this.id = id || (new Date()).getTime();
 
+		//default starting shape position,  if the element is not provided (like in an import)
+		this.posX = 100;
+		this.posY = 40;
+
 		//if canvasShapes is not empty, we have to initialize the canvas with existing shapes
 		var i;
 		for(i=0; i<this.canvasShapes.length; i++){
@@ -45,7 +49,6 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 				this.canvasShapes.at(i).y = this.canvasShapes.at(i).el.attrs['y'];
 			}
 			this.canvasShapes.at(i).el = this.drawShape(this.canvasShapes.at(i), this.canvasShapes.at(i).id, this);			
-
 		}
 		this.drawConnections(this);
 
@@ -104,8 +107,12 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		currentShape.height = shape.height;
 		
 		if(shape.props){
-			if(!currentShape.props) currentShape.props = new Object();
-			currentShape.props['id'] = shape.props['id'];
+			//if(!currentShape.props) currentShape.props = new Object();
+			currentShape.props = _.clone(shape.props);
+		}
+
+		if(shape.shapes){
+			currentShape.shapes = shape.shapes;
 		}
 
 		$(currentShape.el).on("removeShape", function(event, id){
@@ -135,7 +142,8 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	*/
 	drawShape: function(shape, id, context){
 		//creating the canvas shape element
-		var shapeEl = context.paper.shape(shape.url, shape.x, shape.y, (shape.width || 86), (shape.height || 54), context, context.connectHandler);
+		var shapeEl = context.paper.shape(shape.url, shape.x||context.posX, shape.y|| context.posY, (shape.width || 86), (shape.height || 54), context, context.connectHandler);
+		context.posY+=100;
 		shapeEl.id = id;
 		shapeEl.setDblclick(context.composedHandler);
 		//shape text related to canvas element

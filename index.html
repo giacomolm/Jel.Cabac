@@ -91,7 +91,7 @@
 		altern.setName("Altern");
 		altern.setDimension(84,55);	
 		altern.setAsComposed();
-		altern.setMetaelement("altern");
+		altern.setMetaelement("altern", "term");
 		Jel.paletteShapes.addShape(altern);	
 
 		var conj = new Jel.Shape();
@@ -99,7 +99,7 @@
 		conj.setName("Conj");
 		conj.setDimension(84,55);	
 		conj.setAsComposed();
-		conj.setMetaelement("conj");	
+		conj.setMetaelement("conj", "term");	
 		Jel.paletteShapes.addShape(conj);	
 
 		var quot = new Jel.Shape();
@@ -107,7 +107,7 @@
 		quot.setName("Quot");
 		quot.setDimension(84,55);	
 		quot.setAsComposed();
-		quot.setMetaelement("quot");	
+		quot.setMetaelement("quot", "term");	
 		Jel.paletteShapes.addShape(quot);
 
 		var invert = new Jel.Shape();
@@ -117,6 +117,8 @@
 		invert.setAsComposed();		
 		invert.setMetaelement("invert", "term");
 		Jel.paletteShapes.addShape(invert);
+
+		Jel.xmlImport = function(){Jel.fn.xmlImport("terms", "term")};
 
 		/*instance1 = Jel.Canvas.addShape(shape1);	
 

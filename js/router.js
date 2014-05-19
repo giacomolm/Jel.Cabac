@@ -12,7 +12,9 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		"save": "saveFile",
 		"load": "load",
 		"notificate/:word" : "openNotification",
+		"import" : "import",
 		"exportSVG" : "exportSVG",
+		"exportXML" : "exportXML",
 		"addShape/:id": "addShape",
 		"deleteShape/:id" : "deleteShape",
 		"closeTab/:id" : "deleteTab",
@@ -143,6 +145,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       //id of the parent element
       createCanvas : function(shape, id){
       		var  currentComposed = shape;
+
       		if(!currentComposed.shapes) currentComposed.shapes = new Shapes();
 			this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections, id);
 			//add this canvas to the current collection of existing canvas
@@ -302,8 +305,22 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.anteprima.arrange(this.canvasShapes, this.connections);
 		},
 
+		import: function(){
+			if(Jel.importValue){
+				var input = Jel.xmlImport();
+				//Jel.input = input;
+				this.index();
+			}
+		},
+
 		exportSVG : function(){
 			this.anteprima.exportSVG(this.contents[0].paper);
+		},
+
+		exportXML : function(){
+			//if the current container is composed of a dslView, i get it
+			if(!this.dslView || (this.dslView.getText()=="")) this.convert();
+			this.dialog.xml(this.dslView.getText());
 		},
 
 		changePage: function(page){

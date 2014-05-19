@@ -91,6 +91,10 @@ define(["jquery", "underscore", "backbone", "jel"],
       	this.width = width;
       	this.height = height;
       },
+
+      setXsi: function(xsi){
+      	this.xsi = xsi;
+      },
       
       isComposed: function(){
 		if(this.type && this.type == "composed") return true;
@@ -107,7 +111,6 @@ define(["jquery", "underscore", "backbone", "jel"],
     	toJSON: function(options) {
     	  var shape = new Object();
     	  shape.id = this.id;
-    	  shape.id = shape.id;
 		  shape.url = this.url;
 		  if(this.el){
 		  	shape.x = this.el.attrs["x"];
@@ -117,11 +120,15 @@ define(["jquery", "underscore", "backbone", "jel"],
 			  shape.x = this.x;
 			  shape.y = this.y;
 		  }
-		  shape.props = this.props;
+
+		  shape.props = _.clone(this.props);
+		  console.log(this.props, JSON.stringify(shape.props))
 		  shape.metaelement = this.metaelement;
 		  shape.xsi = this.xsi;
 		  shape.name = this.name;
 		  shape.type = this.type;
+		  shape.width = this.width;
+		  shape.height = this.height;
 		  if(this.shapes){
 		  	var i;
 		  	shape.shapes = new Array(this.shapes.length);

@@ -33,6 +33,12 @@ define(["jquery", "underscore", "backbone", "ractive", "text!templates/dsl.html"
             }
         },
 
+        getText: function(){
+            if(this.editor)
+                return this.editor.getValue()
+            else return "";
+        },
+
         refresh : function(){
             this.editor.refresh();
         }
