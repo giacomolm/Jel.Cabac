@@ -94,6 +94,7 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
                     } 
                     else{
                         curr_prop = _.clone(this.model.props);
+                        //we need to redefine some properties, as the clone process can override fields
                         curr_prop.id = propName;
                         curr_prop.name = propName;
                         curr_prop.value = this.model.props[propName];

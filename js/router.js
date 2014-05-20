@@ -21,6 +21,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		"addConnection" : "addConnection",
 		"deleteConnection/:id" : "deleteConnection", 
 		"deleteConnections/:id" : "deleteConnections",
+		"validate": "validate"
       },
 
       initialize: function (paletteShapes, canvasShapes, connections,canvas) {
@@ -210,6 +211,15 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.dslView.refresh();
 		}
 		else console.log("You have to configure an xsd file and at least a base file that will wrap your code");
+      },
+
+      validate: function(){
+      	if(this.dslView && (this.dslView.getText()!="")){
+      		var validateRes = Jel.validate(this.dslView.getText(), Jel.getSchema());
+      		console.log(validateRes)
+			this.notification.warning(validateRes);
+      	}
+      	else this.notification.warning("Convert your draw before validating it");
       },
 
       saveFile: function(){

@@ -12,6 +12,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 		    "mouseout #editMenu" : "hideEditOpt",
 		    "click #editMenu" : "toggleEditOpt",
 		    "click #convertOpt" : "convert",
+		    "click #validateOpt" : "validate",
 		    "click .openOpt" : "openFile",
 		    "mouseover #aboutMenu" : "showAboutOpt",
 		    "mouseout #aboutMenu" : "hideAboutOpt",
@@ -105,6 +106,11 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 		
 		convert: function(){
 			Backbone.history.navigate('text', {trigger: true});
+		},
+
+		validate: function(){
+			$("#editOpts").hide();
+			Backbone.history.navigate('validate', {trigger: true});
 		},
 		
 		save : function(){
