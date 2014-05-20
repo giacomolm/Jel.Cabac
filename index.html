@@ -22,7 +22,6 @@
 		  Jel.setBaseFile('xml/terms.xml');
 		  Jel.setNamespace('http://www.w3.org/2001/XMLSchema-instance');
 		  Jel.setBaseElement('terms');
-		  //Jel.setXMLWrapper('routes');
 		}
 		catch(err){
 		  console.log("Problems with http xml request");
@@ -39,7 +38,8 @@
 		prod.setImage("img/prod.gif");
 		prod.setName("Prod");
 		prod.setDimension(102,54);
-		prod.setMetaelement("prod", "term");	
+		prod.setMetaelement("prod", "term");
+		prod.addElement("output", "label","img/arrow_up.png", 11, 27,46,-10);	
 		Jel.paletteShapes.addShape(prod);
 
 		var cons = new Jel.Shape();
@@ -47,13 +47,16 @@
 		cons.setName("Cons");
 		cons.setDimension(102,54);	
 		cons.setMetaelement("cons", "term");
+		cons.addElement("input", "label","img/arrow_down.png", 11, 27,46,-10);
 		Jel.paletteShapes.addShape(cons);
 
 		var trans = new Jel.Shape();
 		trans.setImage("img/trans.gif");
 		trans.setName("Trans");
 		trans.setDimension(161,55);
-		trans.setMetaelement("trans", "term");	
+		trans.setMetaelement("trans", "term");
+		trans.addElement("input", "label","img/arrow_down.png", 11, 27,55,-10);	
+		trans.addElement("output", "label","img/arrow_up.png", 11, 27,70,-10);
 		Jel.paletteShapes.addShape(trans);
 
 		var split = new Jel.Shape();
@@ -61,6 +64,8 @@
 		split.setName("Split");
 		split.setDimension(233,54);
 		split.setMetaelement("split", "term");
+		split.addElement("input", "label","img/arrow_down.png", 11, 27,80,-10);	
+		split.addElement("output", "label","img/arrow_up.png", 11, 27,110,-10);
 		Jel.paletteShapes.addShape(split);		
 
 		var merge = new Jel.Shape();
@@ -68,13 +73,17 @@
 		merge.setName("Merge");
 		merge.setDimension(233,54);
 		merge.setMetaelement("merge", "term");
+		merge.addElement("input", "label","img/arrow_down.png", 11, 27,80,-10);	
+		merge.addElement("output", "label","img/arrow_up.png", 11, 27,110,-10);
 		Jel.paletteShapes.addShape(merge);	
 
 		var order = new Jel.Shape();
 		order.setImage("img/order.gif");
 		order.setName("Order");
 		order.setDimension(345,54);
-		order.setMetaelement("order", "term");			
+		order.setMetaelement("order", "term");
+		order.addElement("input", "label","img/arrow_down.png", 11, 27,80,-10);	
+		order.addElement("output", "label","img/arrow_up.png", 11, 27,110,-10);		
 		Jel.paletteShapes.addShape(order);		
 
 		//Adding composed algebra terms to palette
@@ -118,19 +127,8 @@
 		invert.setMetaelement("invert", "term");
 		Jel.paletteShapes.addShape(invert);
 
+		//overriding the import function (in reality is a recall, with a new parameter)
 		Jel.xmlImport = function(){Jel.fn.xmlImport("terms", "term")};
-
-		/*instance1 = Jel.Canvas.addShape(shape1);	
-
-		var shape2 = new Jel.Shape();
-		shape2.setImage("img/mt.gif");
-		shape2.setName("Translator");
-		shape2.setPosition(240,140);
-		shape2.setMetaelement('transform');	
-		shape2.setAsComposed();
-		
-
-		Jel.paletteShapes.addShape(shape2);*/
 	}
 
 </script>

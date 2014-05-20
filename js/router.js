@@ -242,6 +242,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 
 		addShape: function(id){
 			this.canvasShapes.trigger("addShape");
+			this.changeProperties(id);
 			this.refreshAnteprima();
 		},
 

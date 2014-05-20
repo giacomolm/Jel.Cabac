@@ -15,6 +15,7 @@ define(["jquery", "underscore", "backbone", "jel"],
 		  type : "base",
 		  shapes : undefined, //if the shape is composed, it's composed of subelement, included in the shapes attr
 		  name : undefined, //name (alias) associated to the shape
+		  elements: new Object(), //elements related to the current shape
       },
       
       initialize: function(shape){
@@ -94,6 +95,17 @@ define(["jquery", "underscore", "backbone", "jel"],
 
       setXsi: function(xsi){
       	this.xsi = xsi;
+      },
+
+      addElement : function(name, label, url, width, height, shiftX, shiftY){
+      	if(!this.elements) this.elements = new Object();
+      	this.elements[name] = new Object();
+      	this.elements[name].url = url;
+      	this.elements[name].label = label;
+      	this.elements[name].width = width;
+      	this.elements[name].height = height;
+      	this.elements[name].shiftX = shiftX;
+      	this.elements[name].shiftY = shiftY;
       },
       
       isComposed: function(){

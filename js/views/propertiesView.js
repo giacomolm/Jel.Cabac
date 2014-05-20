@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "text!templates/properties.html", "text!templates/propertyHeader.html"],
-    function ($, _, Backbone, Ractive, xsdAttr, template, header) {
+define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!templates/properties.html", "text!templates/propertyHeader.html"],
+    function ($, _, Backbone, Ractive, xsdAttr, Jel, template, header) {
 
     var propertiesView = Backbone.View.extend({
 	
@@ -11,6 +11,7 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "text!template
 	},
 	    
         initialize: function (shapeId){
+            this.shapeId = this.model.id;
             this.render();
         },
 
@@ -19,10 +20,28 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "text!template
             for(i=0; i<curr_path.length-1; i++){
                 if(curr_attr) curr_attr = curr_attr[curr_path[i]];
             }
-            
+
             if(curr_attr && curr_path[i])
                 curr_attr[curr_path[i]] = ev.target.value;
-           // else if(this.model.updateProp) this.model.updateProp(ev.target.name, ev.target.value);
+
+
+            var j, curr_label=this.model.props;
+            for(j=0; j<curr_path.length-2; j++){
+                if(curr_label) curr_label = curr_label[curr_path[j]];
+            }
+
+            //we need to update also the graphical element associated, is there is something to update
+            var curr_el;
+            if(curr_el = this.getPaletteElement("name",this.model.name)){
+    
+                if(curr_el.elements && curr_el.elements[curr_path[j]]){ //this element isn't included in an array
+                    this.model.el.updateElement(curr_el.elements[curr_path[j]], ev.target)
+                }
+                else if(curr_el.elements && curr_el.elements[curr_path[j-1]]){ //Array case, where we have *put.[0].label
+                    this.model.el.updateElement(curr_el.elements[curr_path[j-1]], ev.target)
+                }
+            }
+           
         },
 
         addProperty: function(ev){
@@ -46,10 +65,21 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "text!template
                 curr_attr.splice(curr_ind, 1);
                 this.render();
         },
+
+        getPaletteElement: function(attr_name, value){
+            var i;
+            for(i=0; i<Jel.paletteShapes.length; i++){
+                if(Jel.paletteShapes.at(i)[attr_name] == value)
+                    return Jel.paletteShapes.at(i);
+            }
+            return undefined;
+        },
 	
         render: function (eventName) {
             $(this.el).empty();
-            //console.log(this.model.props)
+            this.number = new Object();
+            this.model.el.removeElements();
+
             for(var propName in this.model.props){
                 if(this.model.props.hasOwnProperty(propName)){
                     var curr_prop = new Object();
@@ -70,6 +100,7 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "text!template
                         this.template = new Ractive({el : $(this.el), template: template, data : curr_prop, append:true});
                     }
                 }
+                this.updateCanvas(this.model.props, propName)
             }
 
             return this;
@@ -107,6 +138,20 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "text!template
                         if(parentType && parentType=="Array") curr_prop.minus = true;
                         this.template = new Ractive({el : $(this.el), template: template, data : curr_prop, append:true});
                     }
+                }
+                this.updateCanvas(model,propName, parentName+","+propName);
+            }
+        },
+
+        updateCanvas: function(model, propName, id){
+            var curr_el;
+            if(curr_el = this.getPaletteElement("name",this.model.name)){
+                if(curr_el.elements && curr_el.elements[propName]){
+
+                    curr_el.elements[propName].id = id
+                    if(model[propName] instanceof Array)
+                        this.model.el.addElement(curr_el.elements[propName], model[propName].length, model[propName], true)
+                    else this.model.el.addElement(curr_el.elements[propName], 1, model[propName], false);
                 }
             }
         }
