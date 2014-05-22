@@ -33,7 +33,7 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
             //we need to update also the graphical element associated, is there is something to update
             var curr_el;
             if(curr_el = this.getPaletteElement("name",this.model.name)){
-    
+
                 if(curr_el.elements && curr_el.elements[curr_path[j]]){ //this element isn't included in an array
                     this.model.el.updateElement(curr_el.elements[curr_path[j]], ev.target)
                 }
@@ -41,7 +41,6 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
                     this.model.el.updateElement(curr_el.elements[curr_path[j-1]], ev.target)
                 }
             }
-           
         },
 
         addProperty: function(ev){
@@ -150,9 +149,10 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
                 if(curr_el.elements && curr_el.elements[propName]){
 
                     curr_el.elements[propName].id = id
+                    //we're adding graphically elements to the canvas
                     if(model[propName] instanceof Array)
-                        this.model.el.addElement(curr_el.elements[propName], model[propName].length, model[propName], true)
-                    else this.model.el.addElement(curr_el.elements[propName], 1, model[propName], false);
+                        this.model.el.addElement(curr_el.elements[propName], model[propName].length, model[propName], true, curr_el.elements[propName].behaviour)
+                    else this.model.el.addElement(curr_el.elements[propName], 1, model[propName], false, curr_el.elements[propName].behaviour);
                 }
             }
         }

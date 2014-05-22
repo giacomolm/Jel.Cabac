@@ -39,7 +39,8 @@
 		prod.setName("Prod");
 		prod.setDimension(102,54);
 		prod.setMetaelement("prod", "term");
-		prod.addElement("output", "label","img/arrow_up.png", 11, 27,46,-10);	
+		var output_prod = prod.addElement("output", "label","img/arrow_up.png", 11, 27,46,-10);
+		output_prod.setBehaviour('click', function(ev){document.getElementById(ev.target.id+",label").focus()});
 		Jel.paletteShapes.addShape(prod);
 
 		var cons = new Jel.Shape();
@@ -73,8 +74,10 @@
 		merge.setName("Merge");
 		merge.setDimension(233,54);
 		merge.setMetaelement("merge", "term");
-		merge.addElement("input", "label","img/arrow_down.png", 11, 27,80,-10);	
-		merge.addElement("output", "label","img/arrow_up.png", 11, 27,110,-10);
+		var merge_input = merge.addElement("input", "label","img/arrow_down.png", 11, 27,80,-10);	
+		merge_input.setBehaviour('click', function(ev){document.getElementById(ev.target.id+",label").focus()});
+		var merge_output = merge.addElement("output", "label","img/arrow_up.png", 11, 27,110,-10);
+		merge_output.setBehaviour('click', function(ev){document.getElementById(ev.target.id+",label").focus()});
 		Jel.paletteShapes.addShape(merge);	
 
 		var order = new Jel.Shape();

@@ -143,24 +143,26 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	drawShape: function(shape, id, context){
 		//creating the canvas shape element
 		var shapeEl = context.paper.shape(shape.url, shape.x||context.posX, shape.y|| context.posY, (shape.width || 86), (shape.height || 54), context, context.connectHandler);
-		context.posY+=100;
 		shapeEl.id = id;
 		shapeEl.setDblclick(context.composedHandler);
 		//shape text related to canvas element
 		var shapeText;
-		if(shape.props && shape.props.id)	shapeText = context.paper.shapeText(shape.name, shape.props.id, shape.x, shape.y, shapeEl, context,true);
-		else 	shapeText = context.paper.shapeText(shape.name, undefined, shape.x, shape.y, shapeEl, context,true);
+		if(shape.props && shape.props.id)	shapeText = context.paper.shapeText(shape.name, shape.props.id, shape.x||context.posX, shape.y|| context.posY, shapeEl, context,true);
+		else 	shapeText = context.paper.shapeText(shape.name, undefined, shape.x||context.posX, shape.y|| context.posY, shapeEl, context,true);
 		shapeText.id = id;
 
-		var arrow = context.paper.shapeMenu("img/arrow.png", shape.x, shape.y, 21, 25, shape.width || 86, context, context.onselect);
+		var arrow = context.paper.shapeMenu("img/arrow.png", shape.x||context.posX, shape.y||context.posY, 21, 25, shape.width || 86, context, context.onselect);
 		arrow.id = id;
-		var del = context.paper.shapeMenu("img/delete.png", shape.x, shape.y, 21, 25, shape.width || 86, context, context.deleteShape,-25,-18);
+		var del = context.paper.shapeMenu("img/delete.png", shape.x||context.posX, shape.y||context.posY, 21, 25, shape.width || 86, context, context.deleteShape,-25,-18);
 		del.id = id;
 
 		//Set of all elements related to the current shape
 		shapeEl.elements.push(arrow);						
 		shapeEl.elements.push(shapeText);	
 		shapeEl.elements.push(del);
+
+		//incrementing context position: useful when there aren't information about the position
+		context.posY+=100;
 
 		return shapeEl;
 	},

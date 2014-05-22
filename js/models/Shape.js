@@ -97,6 +97,7 @@ define(["jquery", "underscore", "backbone", "jel"],
       	this.xsi = xsi;
       },
 
+      //Label contains the attribute of the element that contains a textual refence
       addElement : function(name, label, url, width, height, shiftX, shiftY){
       	if(!this.elements) this.elements = new Object();
       	this.elements[name] = new Object();
@@ -106,6 +107,11 @@ define(["jquery", "underscore", "backbone", "jel"],
       	this.elements[name].height = height;
       	this.elements[name].shiftX = shiftX;
       	this.elements[name].shiftY = shiftY;
+      	this.elements[name].setBehaviour = function(eventName, definition){
+      		if(!this.behaviour) this.behaviour = new Object();
+      		this.behaviour[eventName] = definition;
+      	}
+      	return this.elements[name];
       },
       
       isComposed: function(){

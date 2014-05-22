@@ -110,7 +110,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 
 		validate: function(){
 			$("#editOpts").hide();
-			Backbone.history.navigate('validate', {trigger: true});
+			Backbone.history.navigate('validate/'+(new Date()).getTime(), {trigger: true});
 		},
 		
 		save : function(){

@@ -377,6 +377,21 @@ span.clear{
 	height: 13px;
 }
 
+.notification_div{
+	position:relative;
+	top:-3px;
+	width:50%;
+	font-size : 13px;
+	margin-left: 25%;
+	border: 1px solid #FAD42E;
+	background: url('img/ui-bg_flat_55_fbec88_40x100.png') repeat-x scroll 50% 50% #FBEC88;
+	color: #363636;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
 #middle{
 	margin-top : 10px;
 }

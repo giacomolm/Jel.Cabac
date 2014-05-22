@@ -21,7 +21,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		"addConnection" : "addConnection",
 		"deleteConnection/:id" : "deleteConnection", 
 		"deleteConnections/:id" : "deleteConnections",
-		"validate": "validate"
+		"validate/:ts": "validate"
       },
 
       initialize: function (paletteShapes, canvasShapes, connections,canvas) {
@@ -87,7 +87,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		$('#tree').perfectScrollbar();
 
 
-		this.refreshAnteprima();
+		this.refresh();
       },
       
       addCustomEvents: function(){
@@ -216,7 +216,6 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       validate: function(){
       	if(this.dslView && (this.dslView.getText()!="")){
       		var validateRes = Jel.validate(this.dslView.getText(), Jel.getSchema());
-      		console.log(validateRes)
 			this.notification.warning(validateRes);
       	}
       	else this.notification.warning("Convert your draw before validating it");
@@ -314,6 +313,15 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			$('#anteprima').append($(this.anteprima.el));
 
 			this.anteprima.arrange(this.canvasShapes, this.connections);
+		},
+
+		refresh: function(){
+			var j;
+			this.refreshAnteprima();
+			//we need to initialize also properties, after a load operation
+			for(j=0; j<this.canvasShapes.length; j++){
+				this.changeProperties(this.canvasShapes.at(j).id)
+			}
 		},
 
 		import: function(){

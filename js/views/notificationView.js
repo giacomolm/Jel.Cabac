@@ -16,6 +16,8 @@ define(["jquery", "underscore", "backbone", "ractive", "bootbox","text!templates
             if(text.indexOf('validates') != -1){
                 this.model = {message : text};
                 $(this.el).show();
+                //autohide validate message
+                setTimeout((function(context){return function(){ $(context.el).hide()}})(this),4000);
             }
             else{
                 bootbox.alert(text, function() {
@@ -31,7 +33,7 @@ define(["jquery", "underscore", "backbone", "ractive", "bootbox","text!templates
 
         render: function (eventName) {
             this.template = new Ractive({el : $(this.el), template: template, data: this.model});
-            
+
             return this;
         }
        
