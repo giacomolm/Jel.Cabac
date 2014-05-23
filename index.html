@@ -40,7 +40,7 @@
 		prod.setDimension(102,54);
 		prod.setMetaelement("prod", "term");
 		var output_prod = prod.addElement("output", "label","img/arrow_up.png", 11, 27,46,-10);
-		output_prod.setBehaviour('click', function(ev){document.getElementById(ev.target.id+",label").focus()});
+		output_prod.setBehaviour('click', function(ev){ document.getElementById(ev.target.id+",label").focus()});
 		Jel.paletteShapes.addShape(prod);
 
 		var cons = new Jel.Shape();
@@ -48,7 +48,8 @@
 		cons.setName("Cons");
 		cons.setDimension(102,54);	
 		cons.setMetaelement("cons", "term");
-		cons.addElement("input", "label","img/arrow_down.png", 11, 27,46,-10);
+		var input_cons = cons.addElement("input", "label","img/arrow_down.png", 11, 27,46,-10);
+		input_cons.setBehaviour('click', function(ev){ document.getElementById(ev.target.id+",label").focus()});
 		Jel.paletteShapes.addShape(cons);
 
 		var trans = new Jel.Shape();
@@ -96,6 +97,70 @@
 		plug.setDimension(84,54);	
 		plug.setAsComposed();
 		plug.setMetaelement("plug", "term");
+
+		//setting a custom function avery time that a plug member observe modifications in text-field input
+		plug.setBehaviour(function(shape, sourceId){
+							var i,j;
+							for(i=0; i<shape.shapes.length; i++){//output
+								for(j=0; j<shape.shapes.length; j++){//input
+									if(i!=j){
+										if(shape.shapes.at(i).props.actions instanceof Array){
+
+										}
+										else{
+											if(shape.shapes.at(i).props.actions.output){
+												if(shape.shapes.at(j).props.actions instanceof Array){
+
+												}
+												else{
+													if(shape.shapes.at(j).props.actions.input){
+														//there is a matching between ports name 
+														if(shape.shapes.at(i).props.actions.output.label == shape.shapes.at(j).props.actions.input.label){
+															var k,found = false;
+															for(k=0; ((k<Jel.connections.length)&&(!found)); k++){
+																if(Jel.connections.at(k).outbound == shape.shapes.at(i).id && Jel.connections.at(k).inbound == shape.shapes.at(j).id ){
+																	found = true;
+																}
+															}
+															if(!found){
+																Jel.Canvas.connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvas)
+															}
+														}
+														else{
+															var k;
+															for(k=0; k<Jel.connections.length; k++){
+																//if exists a connection between two elements, the port properties must be the same
+																if(Jel.connections.at(k).outbound == shape.shapes.at(i).id && Jel.connections.at(k).inbound == shape.shapes.at(j).id ){
+																	var other_shape = ((shape.shapes.at(i).id == sourceId) ? shape.shapes.at(j) : shape.shapes.at(i));
+
+																	if(other_shape.props.actions.input){
+																		other_shape.props.actions.input.label = shape.shapes.get(sourceId).props.actions.output.label;
+																		//updating the graphical element associated to the other shape									
+																		other_shape.el.updateElement(undefined,{id:"actions,input,label", value:other_shape.props.actions.input.label})
+																	}
+																	else{
+																		other_shape.props.actions.output.label = shape.shapes.get(sourceId).props.actions.input.label;
+																		//updating the graphical element associated to the other shape
+																		other_shape.el.updateElement(undefined,{id:"actions,output,label", value:other_shape.props.actions.output.label})
+																		
+																	}
+
+																	
+																}
+															}
+														}
+													}
+													
+												}
+											}
+											
+										}
+									}
+								}
+							}
+						}
+		);
+
 		Jel.paletteShapes.addShape(plug);	
 
 		var altern = new Jel.Shape();

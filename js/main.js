@@ -23,6 +23,7 @@ require.config({
     filesaver: '../lib/filesaver/filesaver',
     jstree: '../lib/jstree/jstree',
     scrollbar: '../lib/scrollbar/scrollbar',
+    utils: '../lib/utils/utils'
   },
   shim: {
     'jquery': {

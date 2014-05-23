@@ -108,7 +108,8 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		
 		if(shape.props){
 			//if(!currentShape.props) currentShape.props = new Object();
-			currentShape.props = _.clone(shape.props);
+			currentShape.props = $.extend(true, {}, shape.props)
+			//currentShape.props = _.clone(shape.props);
 		}
 
 		if(shape.shapes){

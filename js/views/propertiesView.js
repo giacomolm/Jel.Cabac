@@ -16,14 +16,15 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
         },
 
         updateProps: function(ev){
-            var i,curr_path = ev.target.id.split(","), curr_attr = this.model.props;
+            var i,curr_path = ev.target.id.split(","), curr_attr;
+            curr_attr = this.model.props;
+
             for(i=0; i<curr_path.length-1; i++){
                 if(curr_attr) curr_attr = curr_attr[curr_path[i]];
             }
 
             if(curr_attr && curr_path[i])
                 curr_attr[curr_path[i]] = ev.target.value;
-
 
             var j, curr_label=this.model.props;
             for(j=0; j<curr_path.length-2; j++){
@@ -41,6 +42,8 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
                     this.model.el.updateElement(curr_el.elements[curr_path[j-1]], ev.target)
                 }
             }
+
+            Backbone.history.navigate("checkStatus/"+this.model.id+"/"+(new Date()).getTime(), {trigger:true});
         },
 
         addProperty: function(ev){
@@ -69,7 +72,8 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
             var i;
             for(i=0; i<Jel.paletteShapes.length; i++){
                 if(Jel.paletteShapes.at(i)[attr_name] == value)
-                    return Jel.paletteShapes.at(i);
+                    return $.extend(true, {}, Jel.paletteShapes.at(i))
+                    //return Jel.paletteShapes.at(i);
             }
             return undefined;
         },

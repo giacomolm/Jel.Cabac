@@ -124,6 +124,11 @@ define(["jquery", "underscore", "backbone", "jel"],
       	$(this.el).trigger("propsChanged",[propName, propValue]);
       },
 
+      //Set a shape standard behaviour: it's executed every time a shape attribute (under props) is changed
+      setBehaviour: function(definition){
+      	this.definition = definition;
+      },
+
       //Exporting raw object
       //see here http://stackoverflow.com/questions/10262498/backbone-model-tojson-doesnt-render-all-attributes-to-json
     	toJSON: function(options) {

@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "scrollbar", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView", "views/treeView", "views/anteprimaView"],
-    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, scrollbar, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView, treeView, anteprimaView) {
+define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "scrollbar", "utils", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView", "views/treeView", "views/anteprimaView"],
+    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, scrollbar, Utils, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView, treeView, anteprimaView) {
 
     var AppRouter = Backbone.Router.extend({
 
@@ -21,7 +21,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		"addConnection" : "addConnection",
 		"deleteConnection/:id" : "deleteConnection", 
 		"deleteConnections/:id" : "deleteConnections",
-		"validate/:ts": "validate"
+		"validate/:ts": "validate",
+		"checkStatus/:id/:ts" : "checkStatus"
       },
 
       initialize: function (paletteShapes, canvasShapes, connections,canvas) {
@@ -318,7 +319,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		refresh: function(){
 			var j;
 			this.refreshAnteprima();
-			//we need to initialize also properties, after a load operation
+			//we need to initialize also properties, useful after an import  operation
 			for(j=0; j<this.canvasShapes.length; j++){
 				this.changeProperties(this.canvasShapes.at(j).id)
 			}
@@ -340,6 +341,19 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			//if the current container is composed of a dslView, i get it
 			if(!this.dslView || (this.dslView.getText()=="")) this.convert();
 			this.dialog.xml(this.dslView.getText());
+		},
+
+		//perform custom user operation on the current canvas (root canvas or composed shape)
+		//sourceId contains the id referring to the modified shape
+		checkStatus: function(sourceId){
+			var i,curr_shape;
+			curr_shape = Utils.searchShape(this.canvasShapes, "id", this.canvas.id);
+
+			if(curr_shape){
+				var palette_sh = Utils.searchShape(this.paletteShapes, "name", curr_shape.name);
+				if(palette_sh && palette_sh.definition) palette_sh.definition(curr_shape, sourceId);
+			}
+			//for(i=0; i<this.canvasShapes.length)
 		},
 
 		changePage: function(page){
