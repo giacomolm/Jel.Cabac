@@ -44,23 +44,32 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:complexType name="primitiveterm" abstract="true">
+  <xs:complexType name="primitiveterm">
     <xs:complexContent>
       <xs:extension base="term">
         <xs:sequence>
-    <xs:element name="states" type="statesList"/>
+          <xs:element name="states" type="statesList"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:element name="compoundterm">
-  <xs:complexType>
+  <xs:complexType name="compoundterm">
     <xs:complexContent>
-      <xs:extension base="term"/>
+      <xs:extension base="term">
+        <xs:sequence>
+            <xs:element name="actions">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="input" minOccurs="0" maxOccurs="unbounded" type="actionElement"/>
+                  <xs:element name="output" minOccurs="0" maxOccurs="unbounded" type="actionElement"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  </xs:element>
 
   <xs:complexType name="noop">
     <xs:complexContent>
@@ -72,13 +81,13 @@
     <xs:complexContent>
       <xs:extension base="primitiveterm">
         <xs:sequence>
-      <xs:element name="actions">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="input" minOccurs="1" maxOccurs="1" type="actionElement"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
+          <xs:element name="actions">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="input" minOccurs="1" maxOccurs="1" type="actionElement"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -241,21 +250,21 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="unaryterm">
+  <xs:complexType name="unaryterm" abstract="true">
     <xs:complexContent>
-      <xs:extension base="term">
+      <xs:extension base="compoundterm">
         <xs:sequence>
-      <xs:element name="term" minOccurs="1" maxOccurs="1" type="term"/>
+         <xs:element name="term" minOccurs="1" maxOccurs="1" type="term"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType  name="binaryterm">
+  <xs:complexType  name="binaryterm" abstract="true">
     <xs:complexContent>
-      <xs:extension base="term">
+      <xs:extension base="compoundterm">
         <xs:sequence>
-      <xs:element name="term" minOccurs="2" maxOccurs="2" type="term"/>
+          <xs:element name="term" minOccurs="2" maxOccurs="2" type="term"/> 
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

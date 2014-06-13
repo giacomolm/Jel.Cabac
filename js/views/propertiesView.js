@@ -11,13 +11,15 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
 	},
 	    
         initialize: function (shapeId){
-            this.shapeId = this.model.id;
+            this.shapeId = this.model.id;            
             this.render();
+            //$(this.el).on("keydown", {context : this}, this.updateProps);
         },
 
         updateProps: function(ev){
             var i,curr_path = ev.target.id.split(","), curr_attr;
-            curr_attr = this.model.props;
+            var context = this; //||ev.data.context;
+            curr_attr = context.model.props;
 
             for(i=0; i<curr_path.length-1; i++){
                 if(curr_attr) curr_attr = curr_attr[curr_path[i]];
@@ -26,24 +28,24 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
             if(curr_attr && curr_path[i])
                 curr_attr[curr_path[i]] = ev.target.value;
 
-            var j, curr_label=this.model.props;
+            var j, curr_label=context.model.props;
             for(j=0; j<curr_path.length-2; j++){
                 if(curr_label) curr_label = curr_label[curr_path[j]];
             }
 
             //we need to update also the graphical element associated, is there is something to update
             var curr_el;
-            if(curr_el = this.getPaletteElement("name",this.model.name)){
+            if(curr_el = context.getPaletteElement("name",context.model.name)){
 
                 if(curr_el.elements && curr_el.elements[curr_path[j]]){ //this element isn't included in an array
-                    this.model.el.updateElement(curr_el.elements[curr_path[j]], ev.target)
+                    context.model.el.updateElement(curr_el.elements[curr_path[j]], ev.target)
                 }
                 else if(curr_el.elements && curr_el.elements[curr_path[j-1]]){ //Array case, where we have *put.[0].label
-                    this.model.el.updateElement(curr_el.elements[curr_path[j-1]], ev.target)
+                    context.model.el.updateElement(curr_el.elements[curr_path[j-1]], ev.target)
                 }
             }
 
-            Backbone.history.navigate("checkStatus/"+this.model.id+"/"+(new Date()).getTime(), {trigger:true});
+            Backbone.history.navigate("checkStatus/"+context.model.id+"/"+(new Date()).getTime(), {trigger:true});
         },
 
         addProperty: function(ev){

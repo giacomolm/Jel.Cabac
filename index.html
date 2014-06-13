@@ -97,13 +97,16 @@
 		plug.setDimension(84,54);	
 		plug.setAsComposed();
 		plug.setMetaelement("plug", "term");
-
+		plug.addElement("input", "label","img/arrow_down.png", 11, 27,26,-10);
+		plug.addElement("output", "label","img/arrow_up.png", 11, 27,29,-10);		
 		//setting a custom function avery time that a plug member observe modifications in text-field input
 		plug.setBehaviour(function(shape, sourceId){
+
 							var i,j;
 							for(i=0; i<shape.shapes.length; i++){//output
 								for(j=0; j<shape.shapes.length; j++){//input
 									if(i!=j){
+
 										if(shape.shapes.at(i).props.actions instanceof Array){
 
 										}
@@ -156,6 +159,154 @@
 											
 										}
 									}
+								}
+							}
+
+							//defining the input/output child behaviour: every non plugged port (and also output of plugged) have to be re-exposed
+							shape.props.actions.input = new Array();
+							shape.props.actions.output = new Array();			
+
+							var k,l;								
+
+							for(i=0; i<shape.shapes.length; i++){
+								if(shape.shapes.at(i).props.actions.input instanceof Array){
+
+									if(shape.shapes.at(i).props.actions.output instanceof Array){
+
+										for(j=0; j<shape.shapes.at(i).props.actions.input.length; j++){
+
+											//searching for input port plugged with other term of the same level
+											var found = false;
+											for(k=0; k<shape.shapes.length; k++){
+												if(k!=i){
+													if(shape.shapes.at(k).props.actions.output instanceof Array){
+														for(l=0; l<shape.shapes.at(k).props.actions.output.length; l++){
+															if(shape.shapes.at(k).props.actions.output[l].label == shape.shapes.at(i).props.actions.input[j].label){
+																found = true;
+															}
+														}														
+													}
+													else{
+														if(shape.shapes.at(k).props.actions.output.label == shape.shapes.at(i).props.actions.input[j].label){
+																found = true;
+														}
+													}
+																											
+												}
+											}
+
+											if(!found){
+												shape.props.actions.input.push($.extend(true, {}, shape.shapes.at(i).props.actions.input[j]));
+												shape.props.actions.input.compound = true;
+											}
+										}
+
+
+										for(j=0; j<shape.shapes.at(i).props.actions.output.length; j++){
+											shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output[j]));
+											shape.props.actions.output.compound = true;										
+										}
+									}
+									else{
+										for(j=0; j<shape.shapes.at(i).props.actions.input.length; j++){
+
+											//searching for input port plugged with other term of the same level									
+											var found = false;
+											for(k=0; k<shape.shapes.length; k++){
+												if(k!=i){
+													if(shape.shapes.at(k).props.actions.output instanceof Array){
+														for(l=0; l<shape.shapes.at(k).props.actions.output.length; l++){
+															if(shape.shapes.at(k).props.actions.output[l].label == shape.shapes.at(i).props.actions.input[j].label){
+																found = true;
+															}
+														}														
+													}
+													else{
+														if(shape.shapes.at(k).props.actions.output.label == shape.shapes.at(i).props.actions.input[j].label){
+																found = true;
+														}
+													}
+																											
+												}
+											}											
+
+
+											if(!found){
+												shape.props.actions.input.push($.extend(true, {}, shape.shapes.at(i).props.actions.input[j]));
+												shape.props.actions.input.compound = true;
+											}
+										}
+
+										shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output));
+										shape.props.actions.output.compound = true;	
+									}
+								}
+								else if(shape.shapes.at(i).props.actions.output instanceof Array){
+									if(shape.shapes.at(i).props.actions.input){
+
+										var found = false;
+										for(k=0; k<shape.shapes.length; k++){
+											
+											if(shape.shapes.at(k).props.actions.output instanceof Array){
+												for(l=0; l<shape.shapes.at(k).props.actions.output.length; l++){
+													if(shape.shapes.at(k).props.actions.output[l].label == shape.shapes.at(i).props.actions.input.label){
+														found = true;
+													}
+												}														
+											}
+											else{
+												if(shape.shapes.at(k).props.actions.output.label == shape.shapes.at(i).props.actions.input.label){
+														found = true;
+												}
+											}
+											
+										}											
+
+										if(!found){
+											shape.props.actions.input.push($.extend(true, {}, shape.shapes.at(i).props.actions.input));
+											shape.props.actions.input.compound = true;
+										}
+									}
+									
+									for(j=0; j<shape.shapes.at(i).props.actions.output.length; j++){
+										shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output[j]));
+										shape.props.actions.output.compound = true;
+									}
+
+								}
+								else{
+									if(shape.shapes.at(i).props.actions.input){
+																		
+										var found = false;
+										for(k=0; k<shape.shapes.length; k++){
+											if(i!=k){
+												if(shape.shapes.at(k).props.actions.output instanceof Array){
+													for(l=0; l<shape.shapes.at(k).props.actions.output.length; l++){
+														if(shape.shapes.at(k).props.actions.output[l].label == shape.shapes.at(i).props.actions.input.label){
+															found = true;
+														}
+													}														
+												}
+												else{
+													if(shape.shapes.at(k).props.actions.output.label == shape.shapes.at(i).props.actions.input.label){
+															found = true;
+													}
+												}
+											}
+											
+										}											
+
+										if(!found){
+											shape.props.actions.input.push($.extend(true, {}, shape.shapes.at(i).props.actions.input));
+											shape.props.actions.input.compound = true;
+										}
+										
+									}
+									if(shape.shapes.at(i).props.actions.output){
+										shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output));
+										shape.props.actions.output.compound = true;
+									}
+									
 								}
 							}
 						}
@@ -218,7 +369,7 @@
 			<div id="treeheader"><h5>Tree</h5></div>
 			<div id="tree" class="jstree jstree-1 jstree-default jstree-default-responsive" style="position: relative; overflow:hidden"></div>
 			<div class="properties"><h5>Properties</h5><div id="properties_ul" style="position:relative"><ul id="properties"></ul></div></div>
-			<div id="anteprimaheader"><h5>Anteprima</h5></div>
+			<div id="anteprimaheader"><h5>Preview</h5></div>
 			<div id="anteprima"></div>
 		</div>
 	</div>

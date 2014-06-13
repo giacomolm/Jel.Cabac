@@ -74,7 +74,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       index: function(){	
       	//if the canvas was specified in the init 
       	if(! this.canvas){
-			this.canvas = new canvasView(this.paletteShapes, this.canvasShapes, this.connections);
+			this.canvas = new canvasView(this.paletteShapes, this.canvasShapes, this.connections, 0, 0);
 		}
 		//Root canvas is specified in also in position 0: it's useful when we need the root during the execution
 		this.contents[this.canvas.id] = this.contents[0] = this.canvas;
@@ -149,7 +149,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       		var  currentComposed = shape;
 
       		if(!currentComposed.shapes) currentComposed.shapes = new Shapes();
-			this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections, id);
+      		
+			this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections, id, this.canvas.id);
 			//add this canvas to the current collection of existing canvas
 			this.contents[this.canvas.id] = this.canvas;
 			currentComposed.canvas = this.canvas.id
@@ -345,15 +346,25 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 
 		//perform custom user operation on the current canvas (root canvas or composed shape)
 		//sourceId contains the id referring to the modified shape
-		checkStatus: function(sourceId){
-			var i,curr_shape;
-			curr_shape = Utils.searchShape(this.canvasShapes, "id", this.canvas.id);
+		checkStatus: function(sourceId, ts, curr_canv, prev_canv){
+			var i,source_shape, parent_shape, previous_canvas = prev_canv || this.canvas.previousCanvas,
+											  current_canvas =  curr_canv || this.canvas.id;	
 
-			if(curr_shape){
-				var palette_sh = Utils.searchShape(this.paletteShapes, "name", curr_shape.name);
-				if(palette_sh && palette_sh.definition) palette_sh.definition(curr_shape, sourceId);
+			//get the composed shape, 
+			source_shape = this.contents[current_canvas].canvasShapes.get(sourceId);	
+			parent_shape = this.contents[previous_canvas].canvasShapes.get(source_shape.parentCanvas);
+
+			if(parent_shape){
+				var palette_sh = Utils.searchShape(this.paletteShapes, "name", parent_shape.name);
+				
+				if(palette_sh && palette_sh.definition) palette_sh.definition(parent_shape, sourceId);
 			}
-			//for(i=0; i<this.canvasShapes.length)
+			
+			/*var previous_shape = Utils.searchShape(this.contents[curr_shape.parentCanvas], "id", curr_shape.parentCanvas);*/			
+			if(parent_shape){
+				//console.log(this.contents[previous_canvas].previousCanvas);
+				this.checkStatus(parent_shape.id, 0, parent_shape.parentCanvas, this.contents[previous_canvas].previousCanvas);
+			}
 		},
 
 		changePage: function(page){

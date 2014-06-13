@@ -69,7 +69,7 @@ require(['jquery','domReady','underscore','backbone', 'xmllint', 'router', 'jel'
             //setting the default collection of connections between canvas shapes
             var connections = Jel.connections = new Connections();
 		    //defining the first canvas, the will contains the root elements
-		    var canvas = Jel.Canvas = new canvasView(paletteShapes, canvasShapes, connections);	
+		    var canvas = Jel.Canvas = new canvasView(paletteShapes, canvasShapes, connections, 0, 0);	
 
             //initiliaze the validation function
             Jel.validate = xmllint.validateXML;

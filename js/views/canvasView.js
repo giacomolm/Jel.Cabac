@@ -11,7 +11,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	
 	template : new Ractive({el : $(this.el), template: template}),
 	
-    initialize: function (paletteShapes, canvasShapes, connections, id) {
+    initialize: function (paletteShapes, canvasShapes, connections, id, previousCanvas) {
 		
 		//palette shapes remains the same 
 		this.paletteShapes = paletteShapes;
@@ -53,6 +53,8 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		this.drawConnections(this);
 
 		this.paper.getCanvas().addEventListener('click', this.cleanCanvas(this));
+
+		this.previousCanvas = previousCanvas || 0;
 
 		this.render();
     },	
@@ -105,6 +107,8 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		currentShape.name = shape.name;
 		currentShape.width = shape.width;
 		currentShape.height = shape.height;
+		
+		currentShape.parentCanvas = context.id;
 		
 		if(shape.props){
 			//if(!currentShape.props) currentShape.props = new Object();
