@@ -94,15 +94,18 @@
 		var plug = new Jel.Shape();
 		plug.setImage("img/plug.gif");
 		plug.setName("Plug");
-		plug.setDimension(84,54);	
+		plug.setDimension(233,54);	
 		plug.setAsComposed();
 		plug.setMetaelement("plug", "term");
-		plug.addElement("input", "label","img/arrow_down.png", 11, 27,26,-10);
-		plug.addElement("output", "label","img/arrow_up.png", 11, 27,29,-10);		
+		plug.addElement("input", "label","img/arrow_down.png", 11, 27,30,-10);
+		plug.addElement("output", "label","img/arrow_up.png", 11, 27,60,-10);		
 		//setting a custom function avery time that a plug member observe modifications in text-field input
 		plug.setBehaviour(function(shape, sourceId){
 
 							var i,j;
+							
+							shape.props.actions = new Object();
+							
 							for(i=0; i<shape.shapes.length; i++){//output
 								for(j=0; j<shape.shapes.length; j++){//input
 									if(i!=j){
@@ -118,7 +121,8 @@
 												else{
 													if(shape.shapes.at(j).props.actions.input){
 														//there is a matching between ports name 
-														if(shape.shapes.at(i).props.actions.output.label == shape.shapes.at(j).props.actions.input.label){
+														console.log(shape.shapes.at(i).props.actions.output.label,shape.shapes.at(j).props.actions.input.label)
+														if((shape.shapes.at(i).props.actions.output.label == shape.shapes.at(j).props.actions.input.label)&& shape.shapes.at(i).props.actions.output.label!= undefined && shape.shapes.at(i).props.actions.output.label!="") {
 															var k,found = false;
 															for(k=0; ((k<Jel.connections.length)&&(!found)); k++){
 																if(Jel.connections.at(k).outbound == shape.shapes.at(i).id && Jel.connections.at(k).inbound == shape.shapes.at(j).id ){
@@ -288,8 +292,10 @@
 													}														
 												}
 												else{
-													if(shape.shapes.at(k).props.actions.output.label == shape.shapes.at(i).props.actions.input.label){
-															found = true;
+													if(shape.shapes.at(k).props.actions.output){
+														if(shape.shapes.at(k).props.actions.output.label == shape.shapes.at(i).props.actions.input.label){
+																found = true;
+														}
 													}
 												}
 											}
@@ -317,7 +323,7 @@
 		var altern = new Jel.Shape();
 		altern.setImage("img/altern.gif");
 		altern.setName("Altern");
-		altern.setDimension(84,55);	
+		altern.setDimension(233,55);	
 		altern.setAsComposed();
 		altern.setMetaelement("altern", "term");
 		Jel.paletteShapes.addShape(altern);	
@@ -325,7 +331,7 @@
 		var conj = new Jel.Shape();
 		conj.setImage("img/conj.gif");
 		conj.setName("Conj");
-		conj.setDimension(84,55);	
+		conj.setDimension(233,55);	
 		conj.setAsComposed();
 		conj.setMetaelement("conj", "term");	
 		Jel.paletteShapes.addShape(conj);	
@@ -333,7 +339,7 @@
 		var quot = new Jel.Shape();
 		quot.setImage("img/quot.gif");
 		quot.setName("Quot");
-		quot.setDimension(84,55);	
+		quot.setDimension(233,55);	
 		quot.setAsComposed();
 		quot.setMetaelement("quot", "term");	
 		Jel.paletteShapes.addShape(quot);
@@ -341,7 +347,7 @@
 		var invert = new Jel.Shape();
 		invert.setImage("img/inv.gif");
 		invert.setName("Invert");
-		invert.setDimension(84,55);	
+		invert.setDimension(233,55);	
 		invert.setAsComposed();		
 		invert.setMetaelement("invert", "term");
 		Jel.paletteShapes.addShape(invert);

@@ -167,6 +167,11 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		var current = this.contents[id];
 		//i need to bind the original event handler
 		if(current instanceof canvasView) Jel.Canvas = this.canvas = current;
+
+		var i;
+		for(i=0; i<this.canvas.canvasShapes.length; i++){
+			this.changeProperties(this.canvas.canvasShapes.at(i));
+		}
 		
 		this.tabView.changeTab(id);
 		this.changePage(current);
@@ -258,6 +263,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		},
 
 		deleteShape: function(id){
+			
+			var parent_canvas = this.canvas.canvasShapes.get(id).parentCanvas;
 			//delete the graphicalElement of the currentCanvas!
 			this.canvas.canvasShapes.get(id).el.removeShape();
 			//delete from canvasShapes
@@ -265,6 +272,10 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.deleteConnections(id);
 			this.canvasShapes.trigger("deleteShape");
 			this.refreshAnteprima();
+			//we have to delete relations with its ancestor
+			console.log(parent_canvas);
+			this.checkStatus(id, undefined, undefined, undefined,  parent_canvas);
+			
 		},
 
 		addConnection: function(){
@@ -346,17 +357,23 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 
 		//perform custom user operation on the current canvas (root canvas or composed shape)
 		//sourceId contains the id referring to the modified shape
-		checkStatus: function(sourceId, ts, curr_canv, prev_canv){
+		checkStatus: function(sourceId, ts, curr_canv, prev_canv, parent_canvas){
 			var i,source_shape, parent_shape, previous_canvas = prev_canv || this.canvas.previousCanvas,
 											  current_canvas =  curr_canv || this.canvas.id;	
 
 			//get the composed shape, 
-			source_shape = this.contents[current_canvas].canvasShapes.get(sourceId);	
-			parent_shape = this.contents[previous_canvas].canvasShapes.get(source_shape.parentCanvas);
+			if(parent_canvas){
+				parent_shape = this.contents[previous_canvas].canvasShapes.get(parent_canvas);
+			}
+			else{
+				source_shape = this.contents[current_canvas].canvasShapes.get(sourceId);	
+				parent_shape = this.contents[previous_canvas].canvasShapes.get(source_shape.parentCanvas);
+			}
 
 			if(parent_shape){
 				var palette_sh = Utils.searchShape(this.paletteShapes, "name", parent_shape.name);
-				
+				//temporanely removing additional graphical elements
+				parent_shape.el.removeElements();
 				if(palette_sh && palette_sh.definition) palette_sh.definition(parent_shape, sourceId);
 			}
 			

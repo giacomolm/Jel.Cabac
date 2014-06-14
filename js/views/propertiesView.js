@@ -154,6 +154,9 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
             if(curr_el = this.getPaletteElement("name",this.model.name)){
                 if(curr_el.elements && curr_el.elements[propName]){
 
+                    
+                    //if(this.model.shapes) this.model.el.removeElements();
+
                     curr_el.elements[propName].id = id
                     //we're adding graphically elements to the canvas
                     if(model[propName] instanceof Array)
