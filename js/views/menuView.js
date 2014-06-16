@@ -13,6 +13,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 		    "click #editMenu" : "toggleEditOpt",
 		    "click #convertOpt" : "convert",
 		    "click #validateOpt" : "validate",
+		    "click #livevalidationOpt" : "liveValidation",
 		    "click .openOpt" : "openFile",
 		    "mouseover #aboutMenu" : "showAboutOpt",
 		    "mouseout #aboutMenu" : "hideAboutOpt",
@@ -23,7 +24,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 		    "mouseout #exportOpt" : "hideExportOpts",
 		    "click #importXML" : "importXML", 
 		    "click #exportSVG" : "exportSVG",
-		    "click #exportXML" : "exportXML"
+		    "click #exportXML" : "exportXML",
 
         },	
 	
@@ -111,6 +112,19 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 		validate: function(){
 			$("#editOpts").hide();
 			Backbone.history.navigate('validate/'+(new Date()).getTime(), {trigger: true});
+		},
+
+		liveValidation: function(){
+			$("#editOpts").hide();
+			if($("#livevalidationOpt").html() == "Enable Live Validation"){
+				$("#livevalidationOpt").html("Disable Live Validation");
+				Jel.liveValidation = true;
+			}
+			else{
+				$("#livevalidationOpt").html("Enable Live Validation");
+				Jel.liveValidation = false;
+			}
+			//Backbone.history.navigate('validate/'+(new Date()).getTime(), {trigger: true});
 		},
 		
 		save : function(){

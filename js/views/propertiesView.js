@@ -57,6 +57,7 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
             var new_el = _.clone(curr_attr[curr_attr.length-1]);
             curr_attr.push(new_el);
             this.render();
+            Backbone.history.navigate("checkStatus/"+this.model.id+"/"+(new Date()).getTime(), {trigger:true});
         },
 
         removeProperty: function(ev){
@@ -68,6 +69,7 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
                 var curr_ind = parseInt(curr_path[curr_path.length-1]);
                 curr_attr.splice(curr_ind, 1);
                 this.render();
+                Backbone.history.navigate("checkStatus/"+this.model.id+"/"+(new Date()).getTime(), {trigger:true});
         },
 
         getPaletteElement: function(attr_name, value){

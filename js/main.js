@@ -23,7 +23,8 @@ require.config({
     filesaver: '../lib/filesaver/filesaver',
     jstree: '../lib/jstree/jstree',
     scrollbar: '../lib/scrollbar/scrollbar',
-    utils: '../lib/utils/utils'
+    utils: '../lib/utils/utils',
+    toastr: '../lib/toastr/toastr'
   },
   shim: {
     'jquery': {
@@ -74,6 +75,8 @@ require(['jquery','domReady','underscore','backbone', 'xmllint', 'router', 'jel'
             //initiliaze the validation function
             Jel.validate = xmllint.validateXML;
 		   
+            //disabling the live validation at start up
+            Jel.liveValidation = false;
 		    
 		    domReady(function () {
 		      run();

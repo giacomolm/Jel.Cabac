@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "scrollbar", "utils", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView", "views/treeView", "views/anteprimaView"],
-    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, scrollbar, Utils, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView, treeView, anteprimaView) {
+define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "scrollbar", "utils", "toastr", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView", "views/treeView", "views/anteprimaView"],
+    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, scrollbar, Utils, toastr, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView, treeView, anteprimaView) {
 
     var AppRouter = Backbone.Router.extend({
 
@@ -57,7 +57,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		this.paletteView =new paletteView(this.paletteShapes);
 		$('#palette').append($(this.paletteView.el));
 		//setting perfect scrollbar in order to manage in a better way the overflow
-		$('#basepalette').perfectScrollbar();
+		$('#basepalette').perfectScrollbar({ wheelPropagation: true, useBothWheelAxes : true});
 		$('#composedpalette').perfectScrollbar();
 		      
 		//adding the default text editor view
@@ -191,6 +191,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			$('#properties').empty();
 			this.propertiesView = new propertiesView({model : currentModel});
 			$('#properties').append($(this.propertiesView.el));
+			$('#properties_ul').scrollTop(0);
 			$('#properties_ul').perfectScrollbar('update');
 		}
       },
@@ -228,6 +229,28 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       	else this.notification.warning("Convert your draw before validating it");
       },
 
+      liveValidate: function(){
+      		if(Jel.liveValidation){
+      			var conversionRes;
+				//Conversion phase: the result of conversion is contained in conversionRes
+				if(Jel.wrapper) conversionRes = Jel.convert(Jel.baseFile, Jel.baseElement, Jel.wrapper);
+				else conversionRes = Jel.convert(Jel.baseFile, Jel.baseElement, undefined);
+				
+				var validateRes = Jel.validate(conversionRes, Jel.getSchema());
+				// Clears the current list of toasts
+				toastr.clear();
+				if(validateRes.indexOf('validates') != -1)
+					toastr.success(validateRes);
+				else {
+					var i=0;
+					var messages = validateRes.split(":") ;
+					
+					for(i=5; i<messages.length; i+=5)
+						toastr.warning(messages[i-1]+messages[i].split(".")[0]);
+				}
+			}
+      },
+
       saveFile: function(){
       	this.dialog.file(this.canvasShapes, this.connections);
       },
@@ -260,6 +283,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.canvasShapes.trigger("addShape");
 			this.changeProperties(id);
 			this.refreshAnteprima();
+			this.liveValidate();
 		},
 
 		deleteShape: function(id){
@@ -274,6 +298,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.refreshAnteprima();
 			//we have to delete relations with its ancestor
 			this.checkStatus(id, undefined, undefined, undefined,  parent_canvas);
+
 			
 		},
 
@@ -381,6 +406,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 				//console.log(this.contents[previous_canvas].previousCanvas);
 				this.checkStatus(parent_shape.id, 0, parent_shape.parentCanvas, this.contents[previous_canvas].previousCanvas);
 			}
+			else this.liveValidate();
 		},
 
 		changePage: function(page){

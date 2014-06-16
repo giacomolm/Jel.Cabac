@@ -69,7 +69,8 @@ body {
 
 #basepalette{
 	height : 250px;
-	overflow-y: hidden;
+	width: 140px;
+	overflow-y: scroll;
 	overflow-x: hidden;
 	position:relative;
 	background-color: #FFF;
@@ -78,8 +79,9 @@ body {
 
 #composedpalette{
 	height : 250px;
+	width: 140px;
 	position:relative;
-	overflow-y: hidden;
+	overflow-y: scroll;
 	overflow-x: hidden;
 	background-color: #FFF;
 	padding-top: 3px;
@@ -329,6 +331,10 @@ span.clear{
 	padding-left: -15px;
 }
 
+#prop_container{
+	overflow: hidden;
+}
+
 .properties{
 	font-family: "SQMarket-regular","Helvetica Neue",sans-serif;
 	
@@ -344,9 +350,10 @@ span.clear{
 }
 
 #properties_ul{
-	overflow-y: hidden;
+	overflow-y: scroll;
 	overflow-x: auto;
 	max-height:200px;
+	width:268px;
 	height: auto;
 }
 
