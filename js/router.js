@@ -273,7 +273,6 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.canvasShapes.trigger("deleteShape");
 			this.refreshAnteprima();
 			//we have to delete relations with its ancestor
-			console.log(parent_canvas);
 			this.checkStatus(id, undefined, undefined, undefined,  parent_canvas);
 			
 		},

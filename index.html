@@ -110,58 +110,98 @@
 								for(j=0; j<shape.shapes.length; j++){//input
 									if(i!=j){
 
-										if(shape.shapes.at(i).props.actions instanceof Array){
+										if(shape.shapes.at(i).props.actions.output){
 
-										}
-										else{
-											if(shape.shapes.at(i).props.actions.output){
-												if(shape.shapes.at(j).props.actions instanceof Array){
-
-												}
-												else{
-													if(shape.shapes.at(j).props.actions.input){
-														//there is a matching between ports name 
-														console.log(shape.shapes.at(i).props.actions.output.label,shape.shapes.at(j).props.actions.input.label)
-														if((shape.shapes.at(i).props.actions.output.label == shape.shapes.at(j).props.actions.input.label)&& shape.shapes.at(i).props.actions.output.label!= undefined && shape.shapes.at(i).props.actions.output.label!="") {
-															var k,found = false;
-															for(k=0; ((k<Jel.connections.length)&&(!found)); k++){
-																if(Jel.connections.at(k).outbound == shape.shapes.at(i).id && Jel.connections.at(k).inbound == shape.shapes.at(j).id ){
-																	found = true;
+											if(shape.shapes.at(j).props.actions.input){
+												//there is a matching between ports name 
+												if(shape.shapes.at(i).props.actions.output instanceof Array){
+													var l,m;
+													if(shape.shapes.at(j).props.actions.input instanceof Array){
+														for(l=0; l<shape.shapes.at(i).props.actions.output.length; l++){
+															for(m=0; m<shape.shapes.at(j).props.actions.input.length; m++)
+																if((shape.shapes.at(i).props.actions.output[l].label == shape.shapes.at(j).props.actions.input[m].label)&& shape.shapes.at(i).props.actions.output[l].label!= undefined && shape.shapes.at(i).props.actions.output[l].label!="") {
+																	var k,found = false;
+																	for(k=0; ((k<Jel.connections.length)&&(!found)); k++){
+																		if(Jel.connections.at(k).outbound == shape.shapes.at(i).id && Jel.connections.at(k).inbound == shape.shapes.at(j).id ){
+																			found = true;
+																		}
+																	}
+																	if(!found){
+																		Jel.Canvas.connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvas)
+																	}
 																}
-															}
-															if(!found){
-																Jel.Canvas.connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvas)
-															}
 														}
-														else{
-															var k;
-															for(k=0; k<Jel.connections.length; k++){
-																//if exists a connection between two elements, the port properties must be the same
-																if(Jel.connections.at(k).outbound == shape.shapes.at(i).id && Jel.connections.at(k).inbound == shape.shapes.at(j).id ){
-																	var other_shape = ((shape.shapes.at(i).id == sourceId) ? shape.shapes.at(j) : shape.shapes.at(i));
-
-																	if(other_shape.props.actions.input){
-																		other_shape.props.actions.input.label = shape.shapes.get(sourceId).props.actions.output.label;
-																		//updating the graphical element associated to the other shape									
-																		other_shape.el.updateElement(undefined,{id:"actions,input,label", value:other_shape.props.actions.input.label})
+													}
+													else{
+														for(l=0; l<shape.shapes.at(i).props.actions.output.length; l++){
+															if((shape.shapes.at(i).props.actions.output[l].label == shape.shapes.at(j).props.actions.input.label)&& shape.shapes.at(i).props.actions.output[l].label!= undefined && shape.shapes.at(i).props.actions.output[l].label!="") {
+																var k,found = false;
+																for(k=0; ((k<Jel.connections.length)&&(!found)); k++){
+																	if(Jel.connections.at(k).outbound == shape.shapes.at(i).id && Jel.connections.at(k).inbound == shape.shapes.at(j).id ){
+																		found = true;
 																	}
-																	else{
-																		other_shape.props.actions.output.label = shape.shapes.get(sourceId).props.actions.input.label;
-																		//updating the graphical element associated to the other shape
-																		other_shape.el.updateElement(undefined,{id:"actions,output,label", value:other_shape.props.actions.output.label})
-																		
-																	}
-
-																	
+																}
+																if(!found){
+																	Jel.Canvas.connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvas)
 																}
 															}
 														}
 													}
-													
+												}
+												else {
+
+													if(shape.shapes.at(j).props.actions.input instanceof Array){
+														for(m=0; m<shape.shapes.at(j).props.actions.input.length; m++)
+															if((shape.shapes.at(i).props.actions.output.label == shape.shapes.at(j).props.actions.input[m].label)&& shape.shapes.at(i).props.actions.output.label!= undefined && shape.shapes.at(i).props.actions.output.label!="") {
+																var k,found = false;
+																for(k=0; ((k<Jel.connections.length)&&(!found)); k++){
+																	if(Jel.connections.at(k).outbound == shape.shapes.at(i).id && Jel.connections.at(k).inbound == shape.shapes.at(j).id ){
+																		found = true;
+																	}
+																}
+																if(!found){
+																	Jel.Canvas.connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvas)
+																}
+															}
+													}
+													else if((shape.shapes.at(i).props.actions.output.label == shape.shapes.at(j).props.actions.input.label)&& shape.shapes.at(i).props.actions.output.label!= undefined && shape.shapes.at(i).props.actions.output.label!="") {
+														var k,found = false;
+														for(k=0; ((k<Jel.connections.length)&&(!found)); k++){
+															if(Jel.connections.at(k).outbound == shape.shapes.at(i).id && Jel.connections.at(k).inbound == shape.shapes.at(j).id ){
+																found = true;
+															}
+														}
+														if(!found){
+															Jel.Canvas.connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvas)
+														}
+													}
 												}
 											}
-											
-										}
+
+											else{
+												var k;
+												for(k=0; k<Jel.connections.length; k++){
+													//if exists a connection between two elements, the port properties must be the same
+													if(Jel.connections.at(k).outbound == shape.shapes.at(i).id && Jel.connections.at(k).inbound == shape.shapes.at(j).id ){
+														var other_shape = ((shape.shapes.at(i).id == sourceId) ? shape.shapes.at(j) : shape.shapes.at(i));
+
+														if(other_shape.props.actions.input){
+															other_shape.props.actions.input.label = shape.shapes.get(sourceId).props.actions.output.label;
+															//updating the graphical element associated to the other shape									
+															other_shape.el.updateElement(undefined,{id:"actions,input,label", value:other_shape.props.actions.input.label})
+														}
+														else{
+															other_shape.props.actions.output.label = shape.shapes.get(sourceId).props.actions.input.label;
+															//updating the graphical element associated to the other shape
+															other_shape.el.updateElement(undefined,{id:"actions,output,label", value:other_shape.props.actions.output.label})
+															
+														}
+
+														
+													}
+												}
+											}
+										}	
 									}
 								}
 							}
@@ -218,19 +258,20 @@
 											var found = false;
 											for(k=0; k<shape.shapes.length; k++){
 												if(k!=i){
-													if(shape.shapes.at(k).props.actions.output instanceof Array){
-														for(l=0; l<shape.shapes.at(k).props.actions.output.length; l++){
-															if(shape.shapes.at(k).props.actions.output[l].label == shape.shapes.at(i).props.actions.input[j].label){
-																found = true;
-															}
-														}														
-													}
-													else{
-														if(shape.shapes.at(k).props.actions.output.label == shape.shapes.at(i).props.actions.input[j].label){
-																found = true;
+													if(shape.shapes.at(k).props.actions.output){
+														if(shape.shapes.at(k).props.actions.output instanceof Array){
+															for(l=0; l<shape.shapes.at(k).props.actions.output.length; l++){
+																if(shape.shapes.at(k).props.actions.output[l].label == shape.shapes.at(i).props.actions.input[j].label){
+																	found = true;
+																}
+															}														
 														}
-													}
-																											
+														else{
+															if(shape.shapes.at(k).props.actions.output.label == shape.shapes.at(i).props.actions.input[j].label){
+																	found = true;
+															}
+														}
+													}												
 												}
 											}											
 
@@ -326,6 +367,36 @@
 		altern.setDimension(233,55);	
 		altern.setAsComposed();
 		altern.setMetaelement("altern", "term");
+		altern.addElement("input", "label","img/arrow_down.png", 11, 27,30,-10);
+		altern.addElement("output", "label","img/arrow_up.png", 11, 27,60,-10);
+		altern.setBehaviour(function(shape, sourceId){
+
+			shape.props.actions.input = new Array();
+			shape.props.actions.output = new Array();			
+
+			var i,j;			
+
+			for(i=0; i<shape.shapes.length; i++){
+				if(shape.shapes.at(i).props.actions.input){
+					if(shape.shapes.at(i).props.actions.input instanceof Array){
+						shape.props.actions.input = shape.props.actions.input.concat(shape.shapes.at(i).props.actions.input);
+					}
+					else{
+						shape.props.actions.input.push(shape.shapes.at(i).props.actions.input);						
+					}
+					shape.props.actions.input.compound = true;
+				}
+				if(shape.shapes.at(i).props.actions.output){
+					if(shape.shapes.at(i).props.actions.output instanceof Array){
+						shape.props.actions.output = shape.props.actions.output.concat(shape.shapes.at(i).props.actions.output);						
+					}
+					else{
+						shape.props.actions.output.push(shape.shapes.at(i).props.actions.output);						
+					}
+					shape.props.actions.output.compound = true;
+				}
+			}
+		});
 		Jel.paletteShapes.addShape(altern);	
 
 		var conj = new Jel.Shape();
@@ -333,7 +404,73 @@
 		conj.setName("Conj");
 		conj.setDimension(233,55);	
 		conj.setAsComposed();
-		conj.setMetaelement("conj", "term");	
+		conj.setMetaelement("conj", "term");
+		conj.addElement("input", "label","img/arrow_down.png", 11, 27,30,-10);
+		conj.addElement("output", "label","img/arrow_up.png", 11, 27,60,-10);	
+		conj.setBehaviour(function(shape, sourceId){
+
+			shape.props.actions.input = new Array();
+			shape.props.actions.output = new Array();			
+
+			var i,j;			
+
+			for(i=0; i<shape.shapes.length; i++){
+				if(shape.shapes.at(i).props.actions.input){
+					if(shape.shapes.at(i).props.actions.input instanceof Array){
+						shape.props.actions.input = shape.props.actions.input.concat(shape.shapes.at(i).props.actions.input);
+					}
+					else{
+						shape.props.actions.input.push(shape.shapes.at(i).props.actions.input);						
+					}
+					shape.props.actions.input.compound = true;
+				}
+				if(shape.shapes.at(i).props.actions.output){
+					for(j=i; j<shape.shapes.length; j++){							
+							if(i!=j){
+								var k,l;
+								if(shape.shapes.at(i).props.actions.output instanceof Array){
+									for(k=0; k<shape.shapes.at(i).props.actions.output.length; k++){
+										var found = false;
+										if(shape.shapes.at(j).props.actions.output){
+											if(shape.shapes.at(j).props.actions.output instanceof Array){
+												for(l=k; l<shape.shapes.at(j).props.actions.output.length; l++)
+												if(shape.shapes.at(i).props.actions.output[k].label == shape.shapes.at(j).props.actions.output[l].label){
+													found = true;							
+												}
+											}
+											else{
+												if(shape.shapes.at(i).props.actions.output[k].label == shape.shapes.at(j).props.actions.output.label){
+													found = true;							
+												}
+											}
+										}
+										if(found) shape.props.actions.output.push(shape.shapes.at(i).props.actions.output[k]);	
+									}
+								}
+								else{
+									var found = false;
+									if(shape.shapes.at(j).props.actions.output){
+										if(shape.shapes.at(j).props.actions.output instanceof Array){
+											for(l=0; l<shape.shapes.at(j).props.actions.output.length; l++)
+											if(shape.shapes.at(i).props.actions.output.label == shape.shapes.at(j).props.actions.output[l].label){
+												found = true;							
+											}
+										}
+										else{
+											if(shape.shapes.at(i).props.actions.output.label == shape.shapes.at(j).props.actions.output.label){
+												found = true;							
+											}
+										}
+									}								
+									if(found) shape.props.actions.output.push(shape.shapes.at(i).props.actions.output);										
+								}
+							}
+					}
+				
+					shape.props.actions.output.compound = true;
+				}
+			}
+		});
 		Jel.paletteShapes.addShape(conj);	
 
 		var quot = new Jel.Shape();
@@ -341,7 +478,173 @@
 		quot.setName("Quot");
 		quot.setDimension(233,55);	
 		quot.setAsComposed();
-		quot.setMetaelement("quot", "term");	
+		quot.setMetaelement("quot", "term");
+		quot.addElement("input", "label","img/arrow_down.png", 11, 27,30,-10);
+		quot.addElement("output", "label","img/arrow_up.png", 11, 27,60,-10);
+		quot.setBehaviour(function(shape, sourceId){
+							
+							var i,j;
+							//defining the input/output child behaviour: every non plugged port (and also output of plugged) have to be re-exposed
+							shape.props.actions.input = new Array();
+							shape.props.actions.output = new Array();			
+
+							var k,l;								
+							if(shape.shapes.length == 2){
+								//inverting the actions of the first operand
+								var child_shapes = new Array();
+								child_shapes[0] = $.extend(true, {}, shape.shapes.at(0));
+								child_shapes[0].props.actions.input =  $.extend(true, {}, shape.shapes.at(0).props.actions.output);
+								child_shapes[0].props.actions.output = $.extend(true, {}, shape.shapes.at(0).props.actions.input);
+								child_shapes[1] = $.extend(true, {}, shape.shapes.at(1));
+
+								for(i=0; i<2; i++){
+									if(child_shapes[i].props.actions.input instanceof Array){
+
+										if(child_shapes[i].props.actions.output instanceof Array){
+
+											for(j=0; j<child_shapes[i].props.actions.input.length; j++){
+
+												//searching for input port plugged with other term of the same level
+												var found = false;
+												for(k=0; k<2; k++){
+													if(k!=i){
+														if(child_shapes[k].props.actions.output instanceof Array){
+															for(l=0; l<child_shapes[k].props.actions.output.length; l++){
+																if(child_shapes[k].props.actions.output[l].label == child_shapes[i].props.actions.input[j].label){
+																	found = true;
+																}
+															}														
+														}
+														else{
+															if(child_shapes[k].props.actions.output.label == child_shapes[i].props.actions.input[j].label){
+																	found = true;
+															}
+														}
+																												
+													}
+												}
+
+												if(!found){
+													shape.props.actions.output.push($.extend(true, {}, child_shapes[i].props.actions.input[j]));
+													shape.props.actions.output.compound = true;
+												}
+											}
+
+
+											for(j=0; j<child_shapes[i].props.actions.output.length; j++){
+												shape.props.actions.input.push($.extend(true, {}, child_shapes[i].props.actions.output[j]));
+												shape.props.actions.input.compound = true;										
+											}
+										}
+										else{
+											for(j=0; j<child_shapes[i].props.actions.input.length; j++){
+
+												//searching for input port plugged with other term of the same level									
+												var found = false;
+												for(k=0; k<2; k++){
+													if(k!=i){
+														if(child_shapes[k].props.actions.output){
+															if(child_shapes[k].props.actions.output instanceof Array){
+																for(l=0; l<child_shapes[k].props.actions.output.length; l++){
+																	if(child_shapes[k].props.actions.output[l].label == child_shapes[i].props.actions.input[j].label){
+																		found = true;
+																	}
+																}														
+															}
+															else{
+																if(child_shapes[k].props.actions.output.label == child_shapes[i].props.actions.input[j].label){
+																		found = true;
+																}
+															}
+														}												
+													}
+												}											
+
+
+												if(!found){
+													shape.props.actions.output.push($.extend(true, {}, child_shapes[i].props.actions.input[j]));
+													shape.props.actions.output.compound = true;
+												}
+											}
+
+											shape.props.actions.input.push($.extend(true, {}, child_shapes[i].props.actions.output));
+											shape.props.actions.input.compound = true;	
+										}
+									}
+									else if(child_shapes[i].props.actions.output instanceof Array){
+										if(child_shapes[i].props.actions.input){
+
+											var found = false;
+											for(k=0; k<2; k++){
+												
+												if(child_shapes[k].props.actions.output instanceof Array){
+													for(l=0; l<child_shapes[k].props.actions.output.length; l++){
+														if(child_shapes[k].props.actions.output[l].label == child_shapes[i].props.actions.input.label){
+															found = true;
+														}
+													}														
+												}
+												else{
+													if(child_shapes[k].props.actions.output.label == child_shapes[i].props.actions.input.label){
+															found = true;
+													}
+												}
+												
+											}											
+
+											if(!found){
+												shape.props.actions.output.push($.extend(true, {}, child_shapes[i].props.actions.input));
+												shape.props.actions.output.compound = true;
+											}
+										}
+										
+										for(j=0; j<child_shapes[i].props.actions.output.length; j++){
+											shape.props.actions.input.push($.extend(true, {}, child_shapes[i].props.actions.output[j]));
+											shape.props.actions.input.compound = true;
+										}
+
+									}
+									else{
+
+										if(child_shapes[i].props.actions.input){
+
+											var found = false;
+											for(k=0; k<2; k++){
+												if(i!=k){
+													if(child_shapes[k].props.actions.output instanceof Array){
+														for(l=0; l<child_shapes[k].props.actions.output.length; l++){
+															if(child_shapes[k].props.actions.output[l].label == child_shapes[i].props.actions.input.label){
+																found = true;
+															}
+														}														
+													}
+													else{
+														if(child_shapes[k].props.actions.output){
+															if(child_shapes[k].props.actions.output.label == child_shapes[i].props.actions.input.label){
+																	found = true;
+															}
+														}
+													}
+												}
+												
+											}											
+
+											if(!found && child_shapes[i].props.actions.input.label){
+												shape.props.actions.output.push($.extend(true, {}, child_shapes[i].props.actions.input));
+												shape.props.actions.output.compound = true;
+											}
+											
+										}
+										if(child_shapes[i].props.actions.output && child_shapes[i].props.actions.output.label){												
+											shape.props.actions.input.push($.extend(true, {}, child_shapes[i].props.actions.output));
+											shape.props.actions.input.compound = true;
+										}
+										
+									}
+								}
+							}
+						});
+
 		Jel.paletteShapes.addShape(quot);
 
 		var invert = new Jel.Shape();
@@ -350,6 +653,36 @@
 		invert.setDimension(233,55);	
 		invert.setAsComposed();		
 		invert.setMetaelement("invert", "term");
+		invert.addElement("input", "label","img/arrow_down.png", 11, 27,30,-10);
+		invert.addElement("output", "label","img/arrow_up.png", 11, 27,60,-10);
+		invert.setBehaviour(function(shape, sourceId){
+
+			shape.props.actions.input = new Array();
+			shape.props.actions.output = new Array();			
+
+			var i,j;			
+
+			for(i=0; i<shape.shapes.length; i++){
+				if(shape.shapes.at(i).props.actions.input){
+					if(shape.shapes.at(i).props.actions.input instanceof Array){
+						shape.props.actions.output = shape.props.actions.output.concat(shape.shapes.at(i).props.actions.input);
+					}
+					else{
+						shape.props.actions.output.push(shape.shapes.at(i).props.actions.input);						
+					}
+					shape.props.actions.output.compound = true;
+				}
+				if(shape.shapes.at(i).props.actions.output){
+					if(shape.shapes.at(i).props.actions.output instanceof Array){
+						shape.props.actions.input = shape.props.actions.input.concat(shape.shapes.at(i).props.actions.output);						
+					}
+					else{
+						shape.props.actions.input.push(shape.shapes.at(i).props.actions.output);						
+					}
+					shape.props.actions.input.compound = true;
+				}
+			}
+		});
 		Jel.paletteShapes.addShape(invert);
 
 		//overriding the import function (in reality is a recall, with a new parameter)
