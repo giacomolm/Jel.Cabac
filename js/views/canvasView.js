@@ -161,10 +161,16 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		var del = context.paper.shapeMenu("img/delete.png", shape.x||context.posX, shape.y||context.posY, 21, 25, shape.width || 86, context, context.deleteShape,-25,-18);
 		del.id = id;
 
+		if(shape.type == "composed"){
+			var explode = context.paper.shapeMenu("img/explode.png", shape.x||context.posX, shape.y||context.posY, 21, 25, shape.width || 86, context, context.composedHandler,-50,-18,shapeEl);
+			explode.id = id;
+		}
+
 		//Set of all elements related to the current shape
 		shapeEl.elements.push(arrow);						
 		shapeEl.elements.push(shapeText);	
 		shapeEl.elements.push(del);
+		shapeEl.elements.push(explode);
 
 		//incrementing context position: useful when there aren't information about the position
 		context.posY+=100;
