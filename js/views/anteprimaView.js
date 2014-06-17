@@ -8,7 +8,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                 "click #up" : "zoomIn"
         
     	},
-    	    
+    	  
         initialize: function(){
             this.paper = Raphael(this.$el[0], 200, 200);
             //this.panZoom = this.paper.panzoom({ initialZoom: -5, initialPosition: { x: 0, y: 0}, minZoom:-10, maxZoom: 10});
@@ -39,7 +39,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                 if(anteprimaWidth<temp_width){
                     anteprimaWidth = temp_width;
                 }
-                anteprimaHeight = Math.max(this.getBreadth(key), anteprimaHeight);
+                anteprimaHeight = Math.max(this.getBreadth(key, shapes), anteprimaHeight);
             }
 
             //if(anteprimaWidth>1024 || anteprimaHeight>800)
@@ -61,17 +61,27 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                 //calculating the offSetX..
                 var level = this.getLevel(shapes.at(i).id) || 0;
                 //.. and the offSetY
-                var breadth = this.getBreadth(shapes.at(i).id, parent);
-                //console.log(shapes.at(i).id, shapes.at(i).height, breadth)
+                var breadth = this.getBreadth(shapes.at(i).id, shapes, parent);
+                
                 //Calculating the width depending the parent position, if it exists
                 if(parent) level = Math.max(parent.attrs.width + parent.level+30, level);
-                var currentText = this.paper.text(level+20, breadth+5, shapes.at(i).name + ((shapes.at(i).props && shapes.at(i).props.id) ? ":"+shapes.at(i).props.id : ""));
-                var currentShape = this.paper.image(shapes.at(i).url, level, breadth+12, shapes.at(i).width || 86 , shapes.at(i).height || 54);
+                if(shapes.at(i).type != "composed")
+                    var currentText = this.paper.text(level+20, breadth+5, shapes.at(i).name + ((shapes.at(i).props && shapes.at(i).props.id) ? ":"+shapes.at(i).props.id : ""));
+                
+                var currentShape, url = shapes.at(i).url;
+                //setting the url of composed shape: it must contains the logo
+                if(shapes.at(i).type=="composed"){
+                    var parts = shapes.at(i).url.split(".");
+                    url = parts[0]+"_logo."+parts[1];
+                    currentShape = this.paper.image(url, level+5, breadth+17, 16,16);
+                }
+                else currentShape = this.paper.image(url, level, breadth+12, shapes.at(i).width || 86 , shapes.at(i).height || 54);
                 //WRAPPER PART - alpha
-                /*if(shapes.at(i).shapes){
+                if(shapes.at(i).shapes){
                     var size = this.getParentSize(shapes, shapes.at(i).id);
-                    this.paper.rect(level, breadth+12, size[0], size[1], 10)
-                }*/
+                    this.paper.rect(level, breadth+12, size[0]*1.3, size[1], 10)
+                    //currentShape.attrs.height = size[1];
+                }
                 //setting the original id
                 currentShape.id = shapes.at(i).id;
                 //setting the level, indicating the margin left, in order to retrieve it later
@@ -79,9 +89,10 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                 if(parent) currentShape.parent = parent;
 
                 this.shapes[shapes.at(i).id] = currentShape;
-                //draw connnections between elements of the same level or between the element and its parent
-                if(parent) this.drawConnections(shapes.at(i).id, parent.id);
-                else this.drawConnections(shapes.at(i).id);
+
+                //DISABLED draw connnections between elements of the same level or between the element and its parent
+                /*if(parent) this.drawConnections(shapes.at(i).id, parent.id);
+                else this.drawConnections(shapes.at(i).id);*/
                 if(shapes.at(i).shapes && shapes.at(i).shapes.length>0){
                     this.drawItems(shapes.at(i).shapes, currentShape);
                 }
@@ -111,11 +122,26 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
             return max+30;
         },
 
-        getBreadth : function(shapeId){
-            var i, current_breadth = 0;
+        //getting the offset-y of the shapeId 
+        getBreadth : function(shapeId, shapes, parent){
+            var i,j, current_breadth = 0;
 
-            for (id in this.shapes) {
-                current_breadth += this.shapes[id].attrs.height + 20; 
+            if(parent){
+                current_breadth +=this.shapes[parent.id].attrs.y;
+            }
+
+            for(i=0; i<shapes.length; i++) {                           
+
+                var id = shapes.at(i).id;
+
+                if(id==shapeId) return current_breadth;
+
+                else if(shapes.get(id) && shapes.get(id).shapes){
+                    
+                     current_breadth += this.getParentSize(shapes, id)[1]-40;
+                }
+                current_breadth += shapes.at(i).height+17;
+                
             }
 
             return current_breadth;
@@ -134,8 +160,14 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                             current_w = 31 + getWidth(childs, childs.at(i).id);
                             if(current_w>max) max = current_w;
                         }
-                         console.log(el.id, max+el.width);
-                        return max+el.width;
+                        
+                        var width;
+                        if(shapes.get(shapeId).type=="composed"){
+                            width = 16;
+                        }
+                        else width = el.width;
+                        
+                        return max+width;
                     }
                     else return el.width;
                 },
@@ -148,16 +180,16 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                         var i,current_h = 0;
 
                         for(i=0; i<childs.length; i++){
-                            current_h += 20 + getHeight(childs, childs.at(i).id, context);
+                            current_h += getHeight(childs, childs.at(i).id, context);
                         }
 
-                        return current_h+el.height;
+                        return current_h+el.height+40;
                     }
                     else return el.height;
                 };
 
             var curr_width = getWidth(shapes, shapeId, this), curr_height = getHeight(shapes, shapeId, this);
-            //console.log(curr_width, curr_height) 
+             
             return [curr_width, curr_height];
 
         },
