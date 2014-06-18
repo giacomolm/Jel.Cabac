@@ -86,7 +86,7 @@ require(['jquery','domReady','underscore','backbone', 'xmllint', 'router', 'jel'
     			//call the default initialization function
     			Jel.fn.init();       
     			    
-    			new AppRouter(paletteShapes,canvasShapes,connections,canvas);
+    			Jel.Router = new AppRouter(paletteShapes,canvasShapes,connections,canvas);
     			Backbone.history.start();
 		    }
 	});

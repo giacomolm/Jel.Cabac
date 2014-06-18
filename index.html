@@ -107,6 +107,10 @@
 							
 							shape.props.actions = new Object();
 							
+							//removing all connections of element we're manipulating
+							//console.log(Jel.Canvases[shape.parentCanvas])
+							Jel.Router.deleteConnections(shape.id);
+							
 							for(i=0; i<shape.shapes.length; i++){//output
 								for(j=0; j<shape.shapes.length; j++){//input
 									if(i!=j){
@@ -128,7 +132,8 @@
 																		}
 																	}
 																	if(!found){
-																		Jel.Canvas.connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvas)
+																		console.log(shape.shapes.at(i))
+																		Jel.Canvases[shape.shapes.at(i).parentCanvas].connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvases[shape.shapes.at(i).parentCanvas])
 																	}
 																}
 														}
@@ -143,7 +148,7 @@
 																	}
 																}
 																if(!found){
-																	Jel.Canvas.connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvas)
+																	Jel.Canvases[shape.shapes.at(i).parentCanvas].connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvases[shape.shapes.at(i).parentCanvas])
 																}
 															}
 														}
@@ -160,8 +165,8 @@
 																		found = true;
 																	}
 																}
-																if(!found){
-																	Jel.Canvas.connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvas)
+																if(!found){															
+																	Jel.Canvases[shape.shapes.at(i).parentCanvas].connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvases[shape.shapes.at(i).parentCanvas])
 																}
 															}
 													}
@@ -173,7 +178,8 @@
 															}
 														}
 														if(!found){
-															Jel.Canvas.connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvas)
+															console.log(shape.shapes.at(i))
+															Jel.Canvases[shape.shapes.at(i).parentCanvas].connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvases[shape.shapes.at(i).parentCanvas])
 														}
 													}
 												}
@@ -224,19 +230,20 @@
 											var found = false;
 											for(k=0; k<shape.shapes.length; k++){
 												if(k!=i){
-													if(shape.shapes.at(k).props.actions.output instanceof Array){
-														for(l=0; l<shape.shapes.at(k).props.actions.output.length; l++){
-															if(shape.shapes.at(k).props.actions.output[l].label == shape.shapes.at(i).props.actions.input[j].label){
-																found = true;
-															}
-														}														
-													}
-													else{
-														if(shape.shapes.at(k).props.actions.output.label == shape.shapes.at(i).props.actions.input[j].label){
-																found = true;
+													if(shape.shapes.at(k).props.actions.output){
+														if(shape.shapes.at(k).props.actions.output instanceof Array){
+															for(l=0; l<shape.shapes.at(k).props.actions.output.length; l++){
+																if(shape.shapes.at(k).props.actions.output[l].label == shape.shapes.at(i).props.actions.input[j].label){
+																	found = true;
+																}
+															}														
 														}
-													}
-																											
+														else{
+															if(shape.shapes.at(k).props.actions.output.label == shape.shapes.at(i).props.actions.input[j].label){
+																	found = true;
+															}
+														}
+													}													
 												}
 											}
 
@@ -321,8 +328,8 @@
 
 								}
 								else{
-									if(shape.shapes.at(i).props.actions.input){
-																		
+
+									if(shape.shapes.at(i).props.actions.input){										
 										var found = false;
 										for(k=0; k<shape.shapes.length; k++){
 											if(i!=k){
@@ -351,12 +358,14 @@
 										
 									}
 									if(shape.shapes.at(i).props.actions.output){
+
 										shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output));
 										shape.props.actions.output.compound = true;
 									}
 									
 								}
 							}
+
 						}
 		);
 

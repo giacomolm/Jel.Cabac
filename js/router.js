@@ -29,7 +29,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       	//currentView will contain main views of the application: in this case are canvas and dslTextEditor
 		this.currentView = undefined;
 
-		this.contents = []; //will contain all the main content active view, like canvas and xml editor
+		Jel.Canvases = this.contents = []; //will contain all the main content active view, like canvas and xml editor
 		
 		//make the user defined shapes as default
 		this.paletteShapes = paletteShapes;

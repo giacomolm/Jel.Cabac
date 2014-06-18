@@ -161,8 +161,11 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
 
                     curr_el.elements[propName].id = id
                     //we're adding graphically elements to the canvas
-                    if(model[propName] instanceof Array)
-                        this.model.el.addElement(curr_el.elements[propName], model[propName].length, model[propName], true, curr_el.elements[propName].behaviour)
+                    
+                    if(model[propName] instanceof Array ){
+                        if(model[propName].length>0)
+                            this.model.el.addElement(curr_el.elements[propName], model[propName].length, model[propName], true, curr_el.elements[propName].behaviour)
+                    }                        
                     else this.model.el.addElement(curr_el.elements[propName], 1, model[propName], false, curr_el.elements[propName].behaviour);
                 }
             }

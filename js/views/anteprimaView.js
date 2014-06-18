@@ -73,7 +73,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                 if(shapes.at(i).type=="composed"){
                     var parts = shapes.at(i).url.split(".");
                     url = parts[0]+"_logo."+parts[1];
-                    currentShape = this.paper.image(url, level+5, breadth+17, 16,16);
+                    currentShape = this.paper.image(url, level+5, breadth+5, 16,16);
                 }
                 else currentShape = this.paper.image(url, level, breadth+12, shapes.at(i).width || 86 , shapes.at(i).height || 54);
                 //WRAPPER PART - alpha
@@ -101,25 +101,26 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
 
         //draws connections between current shapeId and all the elements preceeding it, including its parent
         drawConnections: function(shapeId, parent){
-            var i, atleastone=false;
+            /*var i, atleastone=false;
             for(i=0; i<this.connections.length; i++){
                  if(this.connections.at(i).inbound == shapeId){
                     this.paper.connection(this.connections.at(i).id, this.shapes[this.connections.at(i).outbound],this.shapes[this.connections.at(i).inbound],"#000", undefined, this);
                     atleastone = true;
                  }
             }
-            if(!atleastone && parent) this.paper.connection(undefined, this.shapes[parent],this.shapes[shapeId],"#000", undefined, this);
+            if(!atleastone && parent) this.paper.connection(undefined, this.shapes[parent],this.shapes[shapeId],"#000", undefined, this);*/
         },
 
         //calcute the rightmost-innermost element that precedes the current shape: it useful to understand the indentation of an element in Anteprima
         getLevel: function(shapeId){
-            var i, max = 0;
+            /*var i, max = 0;
             for(i=0; i<this.connections.length; i++){
                 if(this.connections.at(i).inbound == shapeId){
                     max = Math.max(this.shapes[this.connections.at(i).outbound].attrs.width+this.shapes[this.connections.at(i).outbound].level, max);
                 }
             }
-            return max+30;
+            return max+30;*/
+            return 0
         },
 
         //getting the offset-y of the shapeId 
@@ -181,7 +182,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
 
                         for(i=0; i<childs.length; i++){
                             //every composed shape fill 30px in wrapping
-                            current_h += 30+getHeight(childs, childs.at(i).id, context);
+                            current_h += 25+getHeight(childs, childs.at(i).id, context);
                         }
 
                         return current_h+el.height;
@@ -206,6 +207,9 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
         },
 
         exportSVG : function(){
+            //correcting the width in relation of composed shapes
+            this.paper.width*=1.2;
+
             var svgData = this.paper.toSVG(),
                 parser = new DOMParser(),
                 doc = parser.parseFromString(svgData, "text/xml");
@@ -214,6 +218,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
             var canvas = document.createElement('canvas');
 
             var ctx = canvas.getContext( "2d" );
+
             
             var i, imgArr = new Array();
             for(i=0; i<images.length; i++){
