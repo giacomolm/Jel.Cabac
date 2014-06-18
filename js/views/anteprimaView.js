@@ -180,10 +180,11 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                         var i,current_h = 0;
 
                         for(i=0; i<childs.length; i++){
-                            current_h += getHeight(childs, childs.at(i).id, context);
+                            //every composed shape fill 30px in wrapping
+                            current_h += 30+getHeight(childs, childs.at(i).id, context);
                         }
 
-                        return current_h+el.height+40;
+                        return current_h+el.height;
                     }
                     else return el.height;
                 };
