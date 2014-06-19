@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "scrollbar", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView", "views/treeView", "views/anteprimaView"],
-    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, scrollbar, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView, treeView, anteprimaView) {
+define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "scrollbar", "utils", "toastr", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView", "views/treeView", "views/anteprimaView"],
+    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, scrollbar, Utils, toastr, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView, treeView, anteprimaView) {
 
     var AppRouter = Backbone.Router.extend({
 
@@ -12,20 +12,24 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		"save": "saveFile",
 		"load": "load",
 		"notificate/:word" : "openNotification",
+		"import" : "import",
 		"exportSVG" : "exportSVG",
+		"exportXML" : "exportXML",
 		"addShape/:id": "addShape",
 		"deleteShape/:id" : "deleteShape",
 		"closeTab/:id" : "deleteTab",
 		"addConnection" : "addConnection",
 		"deleteConnection/:id" : "deleteConnection", 
 		"deleteConnections/:id" : "deleteConnections",
+		"validate/:ts": "validate",
+		"checkStatus/:id/:ts" : "checkStatus"
       },
 
       initialize: function (paletteShapes, canvasShapes, connections,canvas) {
       	//currentView will contain main views of the application: in this case are canvas and dslTextEditor
 		this.currentView = undefined;
 
-		this.contents = []; //will contain all the main content active view, like canvas and xml editor
+		Jel.Canvases = this.contents = []; //will contain all the main content active view, like canvas and xml editor
 		
 		//make the user defined shapes as default
 		this.paletteShapes = paletteShapes;
@@ -52,13 +56,16 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		//adding the palette with the default shapes
 		this.paletteView =new paletteView(this.paletteShapes);
 		$('#palette').append($(this.paletteView.el));
-		//setting perfect scrollbar in order to manager in a goog way the overflow
-		$('#basepalette').perfectScrollbar();
+		//setting perfect scrollbar in order to manage in a better way the overflow
+		$('#basepalette').perfectScrollbar({ wheelPropagation: true, useBothWheelAxes : true});
 		$('#composedpalette').perfectScrollbar();
 		      
 		//adding the default text editor view
 		this.dslView = new dslView();
 		$('#dsl').append($(this.dslView.el));
+
+		//initializing the scrollbar on the empty container
+		$('#properties_ul').perfectScrollbar();
 		//this.addCustomEvents();
 
       },
@@ -67,7 +74,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       index: function(){	
       	//if the canvas was specified in the init 
       	if(! this.canvas){
-			this.canvas = new canvasView(this.paletteShapes, this.canvasShapes, this.connections);
+			this.canvas = new canvasView(this.paletteShapes, this.canvasShapes, this.connections, 0, 0);
 		}
 		//Root canvas is specified in also in position 0: it's useful when we need the root during the execution
 		this.contents[this.canvas.id] = this.contents[0] = this.canvas;
@@ -78,8 +85,10 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		this.treeView = new treeView({collection:this.canvasShapes, canvas: this.canvas});
 		$('#tree').empty();
 		$('#tree').append($(this.treeView.el));
+		$('#tree').perfectScrollbar();
 
-		this.refreshAnteprima();
+
+		this.refresh();
       },
       
       addCustomEvents: function(){
@@ -138,8 +147,10 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       //id of the parent element
       createCanvas : function(shape, id){
       		var  currentComposed = shape;
+
       		if(!currentComposed.shapes) currentComposed.shapes = new Shapes();
-			this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections, id);
+      		
+			this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections, id, this.canvas.id);
 			//add this canvas to the current collection of existing canvas
 			this.contents[this.canvas.id] = this.canvas;
 			currentComposed.canvas = this.canvas.id
@@ -156,6 +167,11 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		var current = this.contents[id];
 		//i need to bind the original event handler
 		if(current instanceof canvasView) Jel.Canvas = this.canvas = current;
+
+		var i;
+		for(i=0; i<this.canvas.canvasShapes.length; i++){
+			this.changeProperties(this.canvas.canvasShapes.at(i));
+		}
 		
 		this.tabView.changeTab(id);
 		this.changePage(current);
@@ -175,6 +191,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			$('#properties').empty();
 			this.propertiesView = new propertiesView({model : currentModel});
 			$('#properties').append($(this.propertiesView.el));
+			$('#properties_ul').scrollTop(0);
+			$('#properties_ul').perfectScrollbar('update');
 		}
       },
 
@@ -183,11 +201,11 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       	if(Jel.baseFile && Jel.baseElement){
 			var conversionRes;
 			//Conversion phase: the result of conversion is contained in conversionRes
-			if(Jel.wrapper) conversionRes = Jel.convert(Jel.baseFile, Jel.wrapper, Jel.baseElement);
-			else conversionRes = Jel.convert(Jel.baseFile, undefined, Jel.baseElement);
+			if(Jel.wrapper) conversionRes = Jel.convert(Jel.baseFile, Jel.baseElement, Jel.wrapper);
+			else conversionRes = Jel.convert(Jel.baseFile, Jel.baseElement, undefined);
 
 			this.dslView.setText(conversionRes);
-
+			
 			var validateRes = Jel.validate(conversionRes, Jel.getSchema());
 			this.notification.warning(validateRes);
 			//if it's the first conversion, we need to add the dsl editor to the main div
@@ -201,6 +219,36 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.dslView.refresh();
 		}
 		else console.log("You have to configure an xsd file and at least a base file that will wrap your code");
+      },
+
+      validate: function(){
+      	if(this.dslView && (this.dslView.getText()!="")){
+      		var validateRes = Jel.validate(this.dslView.getText(), Jel.getSchema());
+			this.notification.warning(validateRes);
+      	}
+      	else this.notification.warning("Convert your draw before validating it");
+      },
+
+      liveValidate: function(){
+      		if(Jel.liveValidation){
+      			var conversionRes;
+				//Conversion phase: the result of conversion is contained in conversionRes
+				if(Jel.wrapper) conversionRes = Jel.convert(Jel.baseFile, Jel.baseElement, Jel.wrapper);
+				else conversionRes = Jel.convert(Jel.baseFile, Jel.baseElement, undefined);
+				
+				var validateRes = Jel.validate(conversionRes, Jel.getSchema());
+				// Clears the current list of toasts
+				toastr.clear();
+				if(validateRes.indexOf('validates') != -1)
+					toastr.success(validateRes);
+				else {
+					var i=0;
+					var messages = validateRes.split(":") ;
+					
+					for(i=5; i<messages.length; i+=5)
+						toastr.warning(messages[i-1]+messages[i].split(".")[0]);
+				}
+			}
       },
 
       saveFile: function(){
@@ -233,10 +281,14 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 
 		addShape: function(id){
 			this.canvasShapes.trigger("addShape");
+			this.changeProperties(id);
 			this.refreshAnteprima();
+			this.liveValidate();
 		},
 
 		deleteShape: function(id){
+			
+			var parent_canvas = this.canvas.canvasShapes.get(id).parentCanvas;
 			//delete the graphicalElement of the currentCanvas!
 			this.canvas.canvasShapes.get(id).el.removeShape();
 			//delete from canvasShapes
@@ -244,6 +296,10 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.deleteConnections(id);
 			this.canvasShapes.trigger("deleteShape");
 			this.refreshAnteprima();
+			//we have to delete relations with its ancestor
+			this.checkStatus(id, undefined, undefined, undefined,  parent_canvas);
+
+			
 		},
 
 		addConnection: function(){
@@ -296,8 +352,62 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.anteprima.arrange(this.canvasShapes, this.connections);
 		},
 
+		refresh: function(){
+			var j;
+			this.refreshAnteprima();
+			//we need to initialize also properties, useful after an import  operation
+			for(j=0; j<this.canvasShapes.length; j++){
+				this.changeProperties(this.canvasShapes.at(j).id)
+			}
+		},
+
+		import: function(){
+			if(Jel.importValue){
+				var input = Jel.xmlImport();
+				//Jel.input = input;
+				this.index();
+			}
+		},
+
 		exportSVG : function(){
 			this.anteprima.exportSVG(this.contents[0].paper);
+		},
+
+		exportXML : function(){
+			//if the current container is composed of a dslView, i get it
+			if(!this.dslView || (this.dslView.getText()=="")) this.convert();
+			this.dialog.xml(this.dslView.getText());
+		},
+
+		//perform custom user operation on the current canvas (root canvas or composed shape)
+		//sourceId contains the id referring to the modified shape
+		checkStatus: function(sourceId, ts, curr_canv, prev_canv, parent_canvas){
+			var i,source_shape, parent_shape, previous_canvas = prev_canv || this.canvas.previousCanvas,
+											  current_canvas =  curr_canv || this.canvas.id;	
+
+			//get the composed shape, 
+			if(parent_canvas){
+				parent_shape = this.contents[previous_canvas].canvasShapes.get(parent_canvas);
+			}
+			else{
+				source_shape = this.contents[current_canvas].canvasShapes.get(sourceId);	
+				parent_shape = this.contents[previous_canvas].canvasShapes.get(source_shape.parentCanvas);
+			}
+
+			if(parent_shape){
+				var palette_sh = Utils.searchShape(this.paletteShapes, "name", parent_shape.name);
+				//temporanely removing additional graphical elements
+				parent_shape.el.removeElements();
+				if(palette_sh && palette_sh.definition) palette_sh.definition(parent_shape, sourceId);
+			}
+			
+			
+			/*var previous_shape = Utils.searchShape(this.contents[curr_shape.parentCanvas], "id", curr_shape.parentCanvas);*/			
+			if(parent_shape){
+				//console.log(this.contents[previous_canvas].previousCanvas);
+				this.checkStatus(parent_shape.id, 0, parent_shape.parentCanvas, this.contents[previous_canvas].previousCanvas);
+			}
+			else this.liveValidate();
 		},
 
 		changePage: function(page){

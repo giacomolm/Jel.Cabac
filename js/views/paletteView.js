@@ -8,11 +8,11 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "collections/S
         },	
 	
         initialize: function (shapes){
-		this.shapes = this.splitByType(shapes);
-		for(var propName in this.shapes) {
-			if(this.shapes.hasOwnProperty(propName)) {
-			   this.render({type: propName || "Base", list:this.shapes[propName]});   
-			}
+			this.shapes = this.splitByType(shapes);
+			for(var propName in this.shapes) {
+				if(this.shapes.hasOwnProperty(propName)) {
+				   this.render({type: propName || "Base", list:this.shapes[propName]});   
+				}
 		    }
         },
 	

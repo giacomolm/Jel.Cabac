@@ -10,10 +10,12 @@ define(["jquery", "underscore", "backbone", "jel"],
 		  height : 0,
 		  props : undefined, //properties associated to shape, retrieved with the help of the meta-element attribute
 		  el : undefined, //represent the grafical element associated
-		  metaelement : undefined, // if an xsd is attached, represents the corresponding element 
+		  metaelement : undefined, // if an xsd is attached, represents the corresponding element,
+		  xsi : undefined,
 		  type : "base",
 		  shapes : undefined, //if the shape is composed, it's composed of subelement, included in the shapes attr
 		  name : undefined, //name (alias) associated to the shape
+		  elements: new Object(), //elements related to the current shape
       },
       
       initialize: function(shape){
@@ -25,9 +27,11 @@ define(["jquery", "underscore", "backbone", "jel"],
 			this.props = shape.props;
 			this.el = shape.el;
 			this.metaelement = shape.metaelement;
+			this.xsi = shape.xsi;
 			this.name = shape.name;
 			this.width = shape.width;
 			this.height = shape.height;
+			this.type = shape.type;
 		}
       },
 
@@ -51,7 +55,7 @@ define(["jquery", "underscore", "backbone", "jel"],
 				for(var propName in result) {
 				    if(result.hasOwnProperty(propName)) {
 					//define its value as an empty string
-					this.props[propName] = '';   
+					this.props[propName] = result[propName];   
 				    }
 				}
 			}
@@ -63,8 +67,12 @@ define(["jquery", "underscore", "backbone", "jel"],
       },
       
       //element is a string
-      setMetaelement: function(element){
+      //xsi indicate if the element is a complex type, and contain the tag that includes the element
+      setMetaelement: function(element, xsi){
 		this.metaelement = element;
+		if(xsi){
+			this.xsi = xsi;
+		}
 		this.setProperties();
       },
 
@@ -84,6 +92,27 @@ define(["jquery", "underscore", "backbone", "jel"],
       	this.width = width;
       	this.height = height;
       },
+
+      setXsi: function(xsi){
+      	this.xsi = xsi;
+      },
+
+      //Label contains the attribute of the element that contains a textual refence
+      addElement : function(name, label, url, width, height, shiftX, shiftY){
+      	if(!this.elements) this.elements = new Object();
+      	this.elements[name] = new Object();
+      	this.elements[name].url = url;
+      	this.elements[name].label = label;
+      	this.elements[name].width = width;
+      	this.elements[name].height = height;
+      	this.elements[name].shiftX = shiftX;
+      	this.elements[name].shiftY = shiftY;
+      	this.elements[name].setBehaviour = function(eventName, definition){
+      		if(!this.behaviour) this.behaviour = new Object();
+      		this.behaviour[eventName] = definition;
+      	}
+      	return this.elements[name];
+      },
       
       isComposed: function(){
 		if(this.type && this.type == "composed") return true;
@@ -95,12 +124,16 @@ define(["jquery", "underscore", "backbone", "jel"],
       	$(this.el).trigger("propsChanged",[propName, propValue]);
       },
 
+      //Set a shape standard behaviour: it's executed every time a shape attribute (under props) is changed
+      setBehaviour: function(definition){
+      	this.definition = definition;
+      },
+
       //Exporting raw object
       //see here http://stackoverflow.com/questions/10262498/backbone-model-tojson-doesnt-render-all-attributes-to-json
     	toJSON: function(options) {
     	  var shape = new Object();
     	  shape.id = this.id;
-    	  shape.id = shape.id;
 		  shape.url = this.url;
 		  if(this.el){
 		  	shape.x = this.el.attrs["x"];
@@ -110,10 +143,15 @@ define(["jquery", "underscore", "backbone", "jel"],
 			  shape.x = this.x;
 			  shape.y = this.y;
 		  }
-		  shape.props = this.props;
+
+		  shape.props = _.clone(this.props);
+		  console.log(this.props, JSON.stringify(shape.props))
 		  shape.metaelement = this.metaelement;
+		  shape.xsi = this.xsi;
 		  shape.name = this.name;
 		  shape.type = this.type;
+		  shape.width = this.width;
+		  shape.height = this.height;
 		  if(this.shapes){
 		  	var i;
 		  	shape.shapes = new Array(this.shapes.length);

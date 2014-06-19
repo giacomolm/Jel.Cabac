@@ -11,7 +11,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	
 	template : new Ractive({el : $(this.el), template: template}),
 	
-    initialize: function (paletteShapes, canvasShapes, connections, id) {
+    initialize: function (paletteShapes, canvasShapes, connections, id, previousCanvas) {
 		
 		//palette shapes remains the same 
 		this.paletteShapes = paletteShapes;
@@ -35,6 +35,10 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		//if the canvas is derived from a composed shape, the canvas id is the same of the shape
 		this.id = id || (new Date()).getTime();
 
+		//default starting shape position,  if the element is not provided (like in an import)
+		this.posX = 100;
+		this.posY = 40;
+
 		//if canvasShapes is not empty, we have to initialize the canvas with existing shapes
 		var i;
 		for(i=0; i<this.canvasShapes.length; i++){
@@ -44,12 +48,15 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 				this.canvasShapes.at(i).x = this.canvasShapes.at(i).el.attrs['x'];
 				this.canvasShapes.at(i).y = this.canvasShapes.at(i).el.attrs['y'];
 			}
-			this.canvasShapes.at(i).el = this.drawShape(this.canvasShapes.at(i), this.canvasShapes.at(i).id, this);			
-
+			this.canvasShapes.at(i).el = this.drawShape(this.canvasShapes.at(i), this.canvasShapes.at(i).id, this);	
+			//setting the parent canvas the container canvas
+			this.canvasShapes.at(i).parentCanvas = this.id;		
 		}
 		this.drawConnections(this);
 
 		this.paper.getCanvas().addEventListener('click', this.cleanCanvas(this));
+
+		this.previousCanvas = previousCanvas || 0;
 
 		this.render();
     },	
@@ -88,7 +95,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		var currentShape = new Shape();
 		//assigning the current timestamp as id
 		currentShape.id = (new Date()).getTime();
-		if(shape.metaelement) currentShape.setMetaelement(shape.metaelement);
+		if(shape.metaelement) currentShape.setMetaelement(shape.metaelement, shape.xsi);
 		
 		//drawing the element with raphael	
 		var shapeEl = context.drawShape(shape, currentShape.id, context);
@@ -103,9 +110,17 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		currentShape.width = shape.width;
 		currentShape.height = shape.height;
 		
+		console.log(currentShape.id, context.id)
+		currentShape.parentCanvas = context.id;
+		
 		if(shape.props){
-			if(!currentShape.props) currentShape.props = new Object();
-			currentShape.props['id'] = shape.props['id'];
+			//if(!currentShape.props) currentShape.props = new Object();
+			currentShape.props = $.extend(true, {}, shape.props)
+			//currentShape.props = _.clone(shape.props);
+		}
+
+		if(shape.shapes){
+			currentShape.shapes = shape.shapes;
 		}
 
 		$(currentShape.el).on("removeShape", function(event, id){
@@ -135,24 +150,33 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	*/
 	drawShape: function(shape, id, context){
 		//creating the canvas shape element
-		var shapeEl = context.paper.shape(shape.url, shape.x, shape.y, (shape.width || 86), (shape.height || 54), context, context.connectHandler);
+		var shapeEl = context.paper.shape(shape.url, shape.x||context.posX, shape.y|| context.posY, (shape.width || 86), (shape.height || 54), context, context.connectHandler);
 		shapeEl.id = id;
 		shapeEl.setDblclick(context.composedHandler);
 		//shape text related to canvas element
 		var shapeText;
-		if(shape.props && shape.props.id)	shapeText = context.paper.shapeText(shape.name, shape.props.id, shape.x, shape.y, shapeEl, context);
-		else 	shapeText = context.paper.shapeText(shape.name, undefined, shape.x, shape.y, shapeEl, context);
+		if(shape.props && shape.props.id)	shapeText = context.paper.shapeText(shape.name, shape.props.id, shape.x||context.posX, shape.y|| context.posY, shapeEl, context,true);
+		else 	shapeText = context.paper.shapeText(shape.name, undefined, shape.x||context.posX, shape.y|| context.posY, shapeEl, context,true);
 		shapeText.id = id;
 
-		var arrow = context.paper.shapeMenu("img/arrow.png", shape.x, shape.y, 21, 25, shape.width || 86, context, context.onselect);
+		var arrow = context.paper.shapeMenu("img/arrow.png", shape.x||context.posX, shape.y||context.posY, 21, 25, shape.width || 86, context, context.onselect);
 		arrow.id = id;
-		var del = context.paper.shapeMenu("img/delete.png", shape.x, shape.y, 21, 25, shape.width || 86, context, context.deleteShape,-25,-18);
+		var del = context.paper.shapeMenu("img/delete.png", shape.x||context.posX, shape.y||context.posY, 21, 25, shape.width || 86, context, context.deleteShape,-25,-18);
 		del.id = id;
+
+		if(shape.type == "composed"){
+			var explode = context.paper.shapeMenu("img/explode.png", shape.x||context.posX, shape.y||context.posY, 21, 25, shape.width || 86, context, context.composedHandler,-50,-18,shapeEl);
+			explode.id = id;
+		}
 
 		//Set of all elements related to the current shape
 		shapeEl.elements.push(arrow);						
 		shapeEl.elements.push(shapeText);	
 		shapeEl.elements.push(del);
+		shapeEl.elements.push(explode);
+
+		//incrementing context position: useful when there aren't information about the position
+		context.posY+=100;
 
 		return shapeEl;
 	},

@@ -23,6 +23,8 @@ require.config({
     filesaver: '../lib/filesaver/filesaver',
     jstree: '../lib/jstree/jstree',
     scrollbar: '../lib/scrollbar/scrollbar',
+    utils: '../lib/utils/utils',
+    toastr: '../lib/toastr/toastr'
   },
   shim: {
     'jquery': {
@@ -59,6 +61,8 @@ require(['jquery','domReady','underscore','backbone', 'xmllint', 'router', 'jel'
 		
 		    //Setting the default Jel shape model,
 		    Jel.Shape = Shape;
+            //Setting the default Jel shape collection function,
+            Jel.Shapes = Shapes;
 		    //the default Jel shape collections for palette,
 		    var paletteShapes = Jel.paletteShapes = new Shapes();
 		    //and the default Jel shapes instances, related to canvas
@@ -66,11 +70,13 @@ require(['jquery','domReady','underscore','backbone', 'xmllint', 'router', 'jel'
             //setting the default collection of connections between canvas shapes
             var connections = Jel.connections = new Connections();
 		    //defining the first canvas, the will contains the root elements
-		    var canvas = Jel.Canvas = new canvasView(paletteShapes, canvasShapes, connections);	
+		    var canvas = Jel.Canvas = new canvasView(paletteShapes, canvasShapes, connections, 0, 0);	
 
             //initiliaze the validation function
             Jel.validate = xmllint.validateXML;
 		   
+            //disabling the live validation at start up
+            Jel.liveValidation = false;
 		    
 		    domReady(function () {
 		      run();
@@ -80,7 +86,7 @@ require(['jquery','domReady','underscore','backbone', 'xmllint', 'router', 'jel'
     			//call the default initialization function
     			Jel.fn.init();       
     			    
-    			new AppRouter(paletteShapes,canvasShapes,connections,canvas);
+    			Jel.Router = new AppRouter(paletteShapes,canvasShapes,connections,canvas);
     			Backbone.history.start();
 		    }
 	});

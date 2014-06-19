@@ -24,7 +24,7 @@ body {
 #palette{
 	float:left;
 	width : 125px;
-	height: 535px;
+	height: 600px;
 	font-family: 'Open Sans','Droid Sans',arial,sans-serif;
 	border:1px solid #DDD;
 }
@@ -68,8 +68,9 @@ body {
 
 
 #basepalette{
-	height : 220px;
-	overflow-y: hidden;
+	height : 250px;
+	width: 140px;
+	overflow-y: scroll;
 	overflow-x: hidden;
 	position:relative;
 	background-color: #FFF;
@@ -77,9 +78,10 @@ body {
 }
 
 #composedpalette{
-	height : 220px;
+	height : 250px;
+	width: 140px;
 	position:relative;
-	overflow-y: hidden;
+	overflow-y: scroll;
 	overflow-x: hidden;
 	background-color: #FFF;
 	padding-top: 3px;
@@ -153,6 +155,7 @@ body {
 	height:511px;
 	background-color: #FFF;
 }
+
 p {
 	text-align: center;
 }
@@ -170,6 +173,7 @@ p {
 #menu ul{
 	list-style-type: none;
 	padding : 0;
+	z-index: 10
 }
 
 #menu li{
@@ -198,6 +202,10 @@ div#menu li:hover{
 	line-height: 1.5;
 	font-weight: normal;
 	cursor:pointer;
+}
+
+#xmlImport{
+	display:none;
 }
 
 .subMenu{
@@ -313,20 +321,27 @@ span.clear{
 	margin-bottom: 10px;
 	border:1px solid #DDD;
 	border-top : none;
-	width: 100%
+	width: 100%;
+	max-height : 170px;
+	height: auto;
+	overflow: hidden;
 }
 
 #tree ul{
 	padding-left: -15px;
 }
 
-#properties{
+#prop_container{
+	overflow: hidden;
+}
+
+.properties{
 	font-family: "SQMarket-regular","Helvetica Neue",sans-serif;
-	width: 100%;
+	
 	border:1px solid #DDD;
 }
 
-#properties h5{
+.properties h5{
 	margin-top: 0;
 	padding-bottom: 10px;
 	border-bottom:1px solid #DDD;
@@ -334,11 +349,19 @@ span.clear{
 	
 }
 
-#properties div > ul{
-	margin-left: -10px;
+#properties_ul{
+	overflow-y: scroll;
+	overflow-x: auto;
+	max-height:200px;
+	width:268px;
+	height: auto;
 }
 
-#properties li{
+.properties ul>div{
+	margin-left: -20px;
+}
+
+.properties li{
 	list-style-type: none;
 }
 
@@ -359,6 +382,21 @@ span.clear{
 #notification{
 	text-align : center;
 	height: 13px;
+}
+
+.notification_div{
+	position:relative;
+	top:-3px;
+	width:50%;
+	font-size : 13px;
+	margin-left: 25%;
+	border: 1px solid #FAD42E;
+	background: url('img/ui-bg_flat_55_fbec88_40x100.png') repeat-x scroll 50% 50% #FBEC88;
+	color: #363636;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 }
 
 #middle{

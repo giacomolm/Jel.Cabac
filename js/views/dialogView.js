@@ -22,6 +22,11 @@ define(["jquery", "underscore", "backbone", "ractive", "bootbox", "filesaver", "
             saveAs(blob, "result.json");
         },
 
+        xml: function(xmlString){
+            var blob = new Blob([xmlString], {type: "application/xml"});
+            saveAs(blob, "result.xml");
+        },
+
         render: function (eventName) {
         this.template = new Ractive({el : $(this.el), template: template});
         return this;
