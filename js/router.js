@@ -401,6 +401,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 				if(palette_sh && palette_sh.definition) palette_sh.definition(parent_shape, sourceId);
 			}
 			
+			
 			/*var previous_shape = Utils.searchShape(this.contents[curr_shape.parentCanvas], "id", curr_shape.parentCanvas);*/			
 			if(parent_shape){
 				//console.log(this.contents[previous_canvas].previousCanvas);

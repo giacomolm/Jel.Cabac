@@ -17,8 +17,10 @@ define(["jquery", "underscore", "ractive", "models/Shape"],
 		//populate the collections starting from an array of shapes
 		createShapes : function(shapes){
 			var i;
+
 			for(i=0; i<shapes.length; i++){
 				var shape = new Shape();
+				
 				shape.setId(shapes[i].id);
 				shape.setImage(shapes[i].url);
 				shape.setDimension(shapes[i].width, shapes[i].height);
@@ -31,10 +33,12 @@ define(["jquery", "underscore", "ractive", "models/Shape"],
 				shape.setType(shapes[i].type);
 				if(shapes[i].shapes){
 					var childsShapes = new Shapes();
-					shape.shapes = childsShapes.createShapes(shapes[i].shapes);
-				}
+					shape.shapes = childsShapes.createShapes(shapes[i].shapes);									
+				}				
 				this.add(shape);
-			}			
+				
+			}
+		
 			return this;
 		},
 

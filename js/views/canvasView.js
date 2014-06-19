@@ -48,7 +48,9 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 				this.canvasShapes.at(i).x = this.canvasShapes.at(i).el.attrs['x'];
 				this.canvasShapes.at(i).y = this.canvasShapes.at(i).el.attrs['y'];
 			}
-			this.canvasShapes.at(i).el = this.drawShape(this.canvasShapes.at(i), this.canvasShapes.at(i).id, this);			
+			this.canvasShapes.at(i).el = this.drawShape(this.canvasShapes.at(i), this.canvasShapes.at(i).id, this);	
+			//setting the parent canvas the container canvas
+			this.canvasShapes.at(i).parentCanvas = this.id;		
 		}
 		this.drawConnections(this);
 
@@ -108,6 +110,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		currentShape.width = shape.width;
 		currentShape.height = shape.height;
 		
+		console.log(currentShape.id, context.id)
 		currentShape.parentCanvas = context.id;
 		
 		if(shape.props){

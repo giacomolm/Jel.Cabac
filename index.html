@@ -148,6 +148,7 @@
 																	}
 																}
 																if(!found){
+																	console.log(shape.shapes.at(i))
 																	Jel.Canvases[shape.shapes.at(i).parentCanvas].connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvases[shape.shapes.at(i).parentCanvas])
 																}
 															}
@@ -247,17 +248,33 @@
 												}
 											}
 
+											//checking if the action is already contained in the actions list
+											for(k=0; k<shape.props.actions.input.length; k++){
+												if(shape.props.actions.input[k].label == shape.shapes.at(i).props.actions.input[j].label){
+													found = true;
+												}
+											}
+
 											if(!found){
 												shape.props.actions.input.push($.extend(true, {}, shape.shapes.at(i).props.actions.input[j]));
 												shape.props.actions.input.compound = true;
 											}
 										}
-
-
+									
 										for(j=0; j<shape.shapes.at(i).props.actions.output.length; j++){
-											shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output[j]));
-											shape.props.actions.output.compound = true;										
+											var found = false;
+											//checking if the action is already contained in the actions list
+											for(k=0; k<shape.props.actions.output.length; k++){
+												if(shape.props.actions.output[k].label == shape.shapes.at(i).props.actions.output[j].label){
+													found = true;
+												}
+											}
+											if(!found){
+												shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output[j]));
+												shape.props.actions.output.compound = true;										
+											}
 										}
+										
 									}
 									else{
 										for(j=0; j<shape.shapes.at(i).props.actions.input.length; j++){
@@ -283,6 +300,12 @@
 												}
 											}											
 
+											//checking if the action is already contained in the actions list
+											for(k=0; k<shape.props.actions.input.length; k++){
+												if(shape.props.actions.input[k].label == shape.shapes.at(i).props.actions.input[j].label){
+													found = true;
+												}
+											}
 
 											if(!found){
 												shape.props.actions.input.push($.extend(true, {}, shape.shapes.at(i).props.actions.input[j]));
@@ -290,8 +313,17 @@
 											}
 										}
 
-										shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output));
-										shape.props.actions.output.compound = true;	
+										var found = false;
+										//checking if the action is already contained in the actions list
+										for(k=0; k<shape.props.actions.output.length; k++){
+											if(shape.props.actions.output[k].label == shape.shapes.at(i).props.actions.output.label){
+												found = true;
+											}
+										}
+										if(!found){
+											shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output));
+											shape.props.actions.output.compound = true;	
+										}
 									}
 								}
 								else if(shape.shapes.at(i).props.actions.output instanceof Array){
@@ -315,6 +347,13 @@
 											
 										}											
 
+										//checking if the action is already contained in the actions list
+										for(k=0; k<shape.props.actions.input.length; k++){
+											if(shape.props.actions.input[k].label == shape.shapes.at(i).props.actions.input.label){
+												found = true;
+											}
+										}
+
 										if(!found){
 											shape.props.actions.input.push($.extend(true, {}, shape.shapes.at(i).props.actions.input));
 											shape.props.actions.input.compound = true;
@@ -322,8 +361,17 @@
 									}
 									
 									for(j=0; j<shape.shapes.at(i).props.actions.output.length; j++){
-										shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output[j]));
-										shape.props.actions.output.compound = true;
+										var found = false;
+										//checking if the action is already contained in the actions list
+										for(k=0; k<shape.props.actions.output.length; k++){
+											if(shape.props.actions.output[k].label == shape.shapes.at(i).props.actions.output[j].label){
+												found = true;
+											}
+										}
+										if(!found){
+											shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output[j]));
+											shape.props.actions.output.compound = true;
+										}
 									}
 
 								}
@@ -349,7 +397,14 @@
 												}
 											}
 											
-										}											
+										}
+
+										//checking if the action is already contained in the actions list
+										for(k=0; k<shape.props.actions.input.length; k++){
+											if(shape.props.actions.input[k].label == shape.shapes.at(i).props.actions.input.label){
+												found = true;
+											}
+										}									
 
 										if(!found){
 											shape.props.actions.input.push($.extend(true, {}, shape.shapes.at(i).props.actions.input));
@@ -358,9 +413,17 @@
 										
 									}
 									if(shape.shapes.at(i).props.actions.output){
-
-										shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output));
-										shape.props.actions.output.compound = true;
+										var found = false;
+										//checking if the action is already contained in the actions list
+										for(k=0; k<shape.props.actions.output.length; k++){
+											if(shape.props.actions.output[k].label == shape.shapes.at(i).props.actions.output.label){
+												found = true;
+											}
+										}
+										if(!found){
+											shape.props.actions.output.push($.extend(true, {}, shape.shapes.at(i).props.actions.output));
+											shape.props.actions.output.compound = true;
+										}
 									}
 									
 								}
