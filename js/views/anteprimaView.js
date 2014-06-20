@@ -120,7 +120,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                 }
             }
             return max+30;*/
-            return 0
+            return 0;
         },
 
         //getting the offset-y of the shapeId 

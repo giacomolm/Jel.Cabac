@@ -168,14 +168,14 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		//i need to bind the original event handler
 		if(current instanceof canvasView) Jel.Canvas = this.canvas = current;
 
+		this.changePage(current);
+
 		var i;
 		for(i=0; i<this.canvas.canvasShapes.length; i++){
 			this.changeProperties(this.canvas.canvasShapes.at(i));
 		}
 		
 		this.tabView.changeTab(id);
-		this.changePage(current);
-		
       },
 
       deleteTab: function(id){
@@ -401,7 +401,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 				if(palette_sh && palette_sh.definition) palette_sh.definition(parent_shape, sourceId);
 			}
 			
-			
+
 			/*var previous_shape = Utils.searchShape(this.contents[curr_shape.parentCanvas], "id", curr_shape.parentCanvas);*/			
 			if(parent_shape){
 				//console.log(this.contents[previous_canvas].previousCanvas);

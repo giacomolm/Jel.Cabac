@@ -110,7 +110,6 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		currentShape.width = shape.width;
 		currentShape.height = shape.height;
 		
-		console.log(currentShape.id, context.id)
 		currentShape.parentCanvas = context.id;
 		
 		if(shape.props){
