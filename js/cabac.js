@@ -431,23 +431,65 @@ Jel.fn.init = function(){
 			shape.props.actions.output = new Array();			
 
 			var i,j;			
-
+			//altern actions are the union of child actions, both input and output
 			for(i=0; i<shape.shapes.length; i++){
 				if(shape.shapes.at(i).props.actions.input){
 					if(shape.shapes.at(i).props.actions.input instanceof Array){
-						shape.props.actions.input = shape.props.actions.input.concat(shape.shapes.at(i).props.actions.input);
+
+						var k,j;
+						for(k=0; k<shape.shapes.at(i).props.actions.input.length; k++){
+							var found = false;
+							for(j=0; j<shape.props.actions.input.length; j++){
+								if(shape.props.actions.input[j].label == shape.shapes.at(i).props.actions.input[k].label){									
+												found = true;
+								}
+							}
+
+							if(!found)
+								shape.props.actions.input.push(shape.shapes.at(i).props.actions.input[k]);
+						}
+
 					}
 					else{
-						shape.props.actions.input.push(shape.shapes.at(i).props.actions.input);						
+						var j;
+						var found = false;
+						for(j=0; j<shape.props.actions.input.length; j++){
+							if(shape.props.actions.input[j].label == shape.shapes.at(i).props.actions.input.label){								
+								found = true;
+							}						
+						}
+						if(!found)
+							shape.props.actions.input.push(shape.shapes.at(i).props.actions.input);
+											
 					}
 					shape.props.actions.input.compound = true;
 				}
 				if(shape.shapes.at(i).props.actions.output){
 					if(shape.shapes.at(i).props.actions.output instanceof Array){
-						shape.props.actions.output = shape.props.actions.output.concat(shape.shapes.at(i).props.actions.output);						
+
+						var k,j;
+						for(k=0; k<shape.shapes.at(i).props.actions.output.length; k++){
+							var found = false;
+							for(j=0; j<shape.props.actions.output.length; j++){
+								if(shape.props.actions.output[j].label == shape.shapes.at(i).props.actions.output[k].label){									
+												found = true;
+								}
+							}
+
+							if(!found)
+								shape.props.actions.output.push(shape.shapes.at(i).props.actions.output[k]);
+						}					
 					}
 					else{
-						shape.props.actions.output.push(shape.shapes.at(i).props.actions.output);						
+						var j;
+						var found = false;
+						for(j=0; j<shape.props.actions.output.length; j++){
+							if(shape.props.actions.output[j].label == shape.shapes.at(i).props.actions.output.label){								
+								found = true;
+							}						
+						}
+						if(!found)
+							shape.props.actions.output.push(shape.shapes.at(i).props.actions.output);						
 					}
 					shape.props.actions.output.compound = true;
 				}
@@ -473,10 +515,31 @@ Jel.fn.init = function(){
 			for(i=0; i<shape.shapes.length; i++){
 				if(shape.shapes.at(i).props.actions.input){
 					if(shape.shapes.at(i).props.actions.input instanceof Array){
-						shape.props.actions.input = shape.props.actions.input.concat(shape.shapes.at(i).props.actions.input);
+						var k,j;
+						for(k=0; k<shape.shapes.at(i).props.actions.input.length; k++){
+							var found = false;
+							for(j=0; j<shape.props.actions.input.length; j++){
+								if(shape.props.actions.input[j].label == shape.shapes.at(i).props.actions.input[k].label){									
+												found = true;
+								}
+							}
+
+							if(!found)
+								shape.props.actions.input.push(shape.shapes.at(i).props.actions.input[k]);
+						}
+
 					}
 					else{
-						shape.props.actions.input.push(shape.shapes.at(i).props.actions.input);						
+						var j;
+						var found = false;
+						for(j=0; j<shape.props.actions.input.length; j++){
+							if(shape.props.actions.input[j].label == shape.shapes.at(i).props.actions.input.label){								
+								found = true;
+							}						
+						}
+						if(!found)
+							shape.props.actions.input.push(shape.shapes.at(i).props.actions.input);
+											
 					}
 					shape.props.actions.input.compound = true;
 				}
