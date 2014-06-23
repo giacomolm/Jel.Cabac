@@ -10,7 +10,9 @@ QUnit.test( "Import Test", function( assert ) {
 
     Jel.Router.import();
 
-    var conversionRes = Jel.convert(Jel.baseFile, Jel.baseElement, undefined);
+    //var conversionRes = Jel.convert(Jel.baseFile, Jel.baseElement, undefined);
 
-    assert.ok( Jel.importValue == conversionRes, "Passed!" );
+    Jel.Router.convert();
+
+    assert.ok( Jel.importValue == Jel.Router.dslView.getText(), "Passed!" );
 });
