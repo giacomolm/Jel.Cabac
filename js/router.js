@@ -159,7 +159,16 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			else this.tabView.addTab(this.canvas.id,"canvas"+this.tabView.getHlength()); //otherwise we use 'canvas#'
 			//Setting as current main canvas
 			Jel.Canvas = this.canvas;
-			this.changePage(this.canvas);	
+			this.changePage(this.canvas);
+
+			//initializing graphical element is we are reopening an existing canvas
+			var i;
+			for(i=0; i<this.canvas.canvasShapes.length; i++){
+				this.changeProperties(this.canvas.canvasShapes.at(i));
+				this.checkStatus(this.canvas.canvasShapes.at(i).id, undefined, undefined, undefined,  this.canvas.canvasShapes.at(i).parentCanvas);
+			}
+
+
       },
       
       changeTab: function(id){	

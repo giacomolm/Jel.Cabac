@@ -161,8 +161,7 @@ Jel.fn.init = function(){
 																found = true;
 															}
 														}
-														if(!found){
-															console.log(shape.shapes.at(i))
+														if(!found){															
 															Jel.Canvases[shape.shapes.at(i).parentCanvas].connect(shape.shapes.at(i), shape.shapes.at(j), Jel.Canvases[shape.shapes.at(i).parentCanvas])
 														}
 													}
@@ -618,7 +617,7 @@ Jel.fn.init = function(){
 
 								for(i=0; i<2; i++){
 									if(child_shapes[i].props.actions.input instanceof Array){
-
+										 
 										if(child_shapes[i].props.actions.output instanceof Array){
 
 											for(j=0; j<child_shapes[i].props.actions.input.length; j++){
