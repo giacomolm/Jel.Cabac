@@ -10,9 +10,10 @@ QUnit.test( "Plug Test", function( assert ) {
 
     Jel.Router.import();
 
-    //var conversionRes = Jel.convert(Jel.baseFile, Jel.baseElement, undefined);
+    //getting the current canvas shape (plug), starting from canvas 0 containing the root
+    var plug = Jel.Canvases[0].canvasShapes.at(0);
 
-    //Jel.Router.convert();
+    assert.ok( plug.props.actions.input == undefined, "Passed!" );
 
-    assert.ok( "ciao" == "ciao", "Passed!" );
+    assert.ok( plug.props.actions.output != undefined, "Passed!" );
 });
