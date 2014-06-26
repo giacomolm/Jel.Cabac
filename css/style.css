@@ -424,6 +424,9 @@ span.clear{
 	margin-bottom:3px;
 }
 
+._compound{
+	display:none;
+}
 
 
 /* Let's get this party started 
