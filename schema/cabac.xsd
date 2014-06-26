@@ -26,7 +26,7 @@
 
   <xs:complexType name="protocolType">
     <xs:sequence>
-      <xs:element name="transition" type="transitionType"/>
+      <xs:element name="transitions" minOccurs="1" maxOccurs="unbounded" type="transitionType"/>
     </xs:sequence>
   </xs:complexType>
   

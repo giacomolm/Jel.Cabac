@@ -96,6 +96,7 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
                         this.template = new Ractive({el : $(this.el), template: header, data: curr_prop, append:true});
                     } 
                     else if(this.model.props[propName] instanceof Object){
+                        curr_prop.class = "object";
                         this.template = new Ractive({el : $(this.el), template: header, data: curr_prop, append:true});
                         this.subRender(this.model.props[propName], propName);
                     } 
@@ -124,6 +125,7 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
                         var curr_prop = new Object();
                         curr_prop.id = parentName+","+propName;
                         curr_prop.name = propName;
+                        curr_prop.class = "array";
                         curr_prop.unbounded = true;
                         
                         this.template = new Ractive({el : $(this.el), template: header, data: curr_prop, append:true});
@@ -133,6 +135,7 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
                         var curr_prop = new Object();
                         curr_prop.id = parentName+","+propName;
                         curr_prop.name = propName;
+                        curr_prop.class = "sub_object";
                         curr_prop.unbounded = model[propName].unbounded;
                         if(parentType && parentType=="Array") curr_prop.minus = true;
                         this.template = new Ractive({el : $(this.el), template: header, data: curr_prop, append:true});
@@ -142,7 +145,7 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "jel", "text!t
                         var curr_prop = new Object();
                         curr_prop.id = parentName+","+propName;
                         curr_prop.name = propName;
-                        curr_prop.value = model[propName];
+                        curr_prop.value = model[propName];                        
                         if(parentType && parentType=="Array") curr_prop.minus = true;
                         this.template = new Ractive({el : $(this.el), template: template, data : curr_prop, append:true});
                     }

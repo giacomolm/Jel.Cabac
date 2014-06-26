@@ -407,6 +407,24 @@ span.clear{
 	text-align: center;
 }
 
+.object{
+	margin-top:9px;
+	margin-bottom:3px;
+	margin-left : -3px;
+	text-transform:uppercase;
+}
+
+.sub_object{
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+.array{
+	margin-top:5px;
+	margin-bottom:3px;
+}
+
+
 
 /* Let's get this party started 
 ::-webkit-scrollbar {
