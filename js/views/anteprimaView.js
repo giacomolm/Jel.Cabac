@@ -79,7 +79,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                 //WRAPPER PART - alpha
                 if(shapes.at(i).shapes){
                     var size = this.getParentSize(shapes, shapes.at(i).id);
-                    this.paper.rect(level, breadth, size[0]*1.2, size[1], 10)
+                    this.paper.rect(level, breadth, size[0]*1.1, size[1], 10)
                     //currentShape.attrs.height = size[1];
                 }
                 //setting the original id
