@@ -58,7 +58,6 @@ require.config({
 /*Using the javascript module pattern to allow external use*/
 require(['jquery','domReady','underscore','backbone', 'xmllint', 'router', 'jel', 'views/paletteView', "views/canvasView", "models/Shape", "collections/Shapes", "collections/Connections"],
         function ($,domReady, _,Backbone, xmllint, AppRouter, Jel, PaletteView, canvasView, Shape, Shapes, Connections) {           
-        
             //Setting the default Jel shape model,
             Jel.Shape = Shape;
             //Setting the default Jel shape collection function,
